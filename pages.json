@@ -1,0 +1,118 @@
+{
+	"pages": [
+		{
+			"path": "pages/Login/Login",
+			"style": {
+				"navigationBarTitleText": "登录",
+				"navigationStyle": "custom"
+			}
+		},
+		{
+            "path" : "pages/Login/LoginByMobile/LoginByMobile",
+            "style" : {
+				"navigationBarTitleText": "手机验证码登录",
+				"navigationBarBackgroundColor": "#2a6dfe"
+			}
+        },
+        {
+            "path" : "pages/Content/Home/Home",
+            "style": {
+				"navigationBarTitleText": "主页",
+				"navigationStyle": "custom"
+            }
+		},
+		{
+            "path" : "pages/Content/Search/Search",
+            "style" : {
+				"navigationBarTitleText": "发现",
+				"navigationBarBackgroundColor": "#ffffff"
+			}
+        },
+		{
+            "path" : "pages/Content/Message/Message",
+            "style" : {
+				"navigationBarTitleText": "消息",
+				"navigationBarBackgroundColor": "#ffffff"
+			}
+        },
+        {
+            "path" : "pages/Content/Mine/Mine",
+            "style": {
+            	"navigationBarTitleText": "我的",
+            	"navigationStyle": "custom"
+            }
+        },
+        {
+            "path" : "pages/Content/Add/Add",
+            "style": {
+				"navigationBarTitleText": "发微博"
+            }
+        }
+        ,{
+            "path" : "pages/Content/Mine/ModifyNickname/ModifyNickname",
+            "style": {
+            	"navigationBarTitleText": "修改昵称"
+            }
+        }
+        ,{
+            "path" : "pages/Content/Mine/MyMicroBlog/MyMicroBlog",
+            "style" : {
+				"navigationBarTitleText": "我的微博"
+			}
+        }
+        ,{
+            "path" : "pages/Content/Email/Email",
+            "style" : {
+				"navigationBarTitleText": "邮箱绑定"
+			}
+        }
+        ,{
+            "path" : "pages/Content/Mine/MyMicroBlog/ModifyBlog/ModifyBlog",
+            "style" : {
+				"navigationBarTitleText": "编辑微博"
+			}
+        }
+    ],
+	"globalStyle": {
+		"navigationBarTextStyle": "white",
+		"navigationBarTitleText": "if",
+		"navigationBarBackgroundColor": "#2a6dfe",
+		"backgroundColor": "#F8F8F8"
+	},
+	"tabBar": {
+		"color": "#cdcdcd",
+		"selectedColor": "#39cffc",
+		"borderStyle": "white",
+		"backgroundColor": "#ffffff",
+		"list": [
+			{	
+				"pagePath": "pages/Content/Home/Home",
+				"iconPath": "static/img/tabBar/home.png",
+				"selectedIconPath": "static/img/tabBar/home_select.png"           
+			},{
+				"pagePath": "pages/Content/Search/Search",
+				"iconPath": "static/img/tabBar/search.png",
+				"selectedIconPath": "static/img/tabBar/search_select.png"     
+			},
+			{
+				"pagePath": "pages/Content/Message/Message",
+				"iconPath": "static/img/tabBar/message.png",
+				"selectedIconPath": "static/img/tabBar/message_select.png"    	 
+			},
+			{
+				"pagePath": "pages/Content/Mine/Mine",
+				"iconPath": "static/img/tabBar/mine.png",
+				"selectedIconPath": "static/img/tabBar/mine_select.png"      	 
+			}
+		]
+	},
+	"condition" : {
+		"current": 0,
+		"list": [
+			{
+				"name": "SignByMobile",
+				"path": "pages/Login/LoginByMobile/LoginByMobile"
+			}
+		]
+	}
+}

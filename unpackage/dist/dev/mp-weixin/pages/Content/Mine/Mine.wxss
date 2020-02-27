@@ -1,0 +1,46 @@
+
+.full.data-v-7ae7ad22{
+	position: fixed;
+	height: 100%;
+	width: 100%;
+	display: -webkit-box;
+	display: -webkit-flex;
+	display: -ms-flexbox;
+	display: flex;
+	-webkit-box-orient: vertical;
+	-webkit-box-direction: normal;
+	-webkit-flex-direction: column;
+	    -ms-flex-direction: column;
+	        flex-direction: column;
+	background-color: #FFFFFF;
+}
+.suggestion.data-v-7ae7ad22{
+	margin-left: 50rpx;
+	letter-spacing:2rpx;
+}
+.header.data-v-7ae7ad22{
+	height: 395rpx;
+	background: #6A2BF8;
+}
+.avatar.data-v-7ae7ad22{
+	width: 162rpx;
+	height: 162rpx;
+	border-radius: 50%;
+	border:4rpx solid #FFFFFF;
+}
+.vipStatus.data-v-7ae7ad22{
+	width:30rpx;
+	height: 30rpx;
+}
+.cerStatus.data-v-7ae7ad22{
+	width:30rpx;
+	height: 30rpx;
+}
+.item.data-v-7ae7ad22{
+	padding-top: 40rpx;
+	padding-right: 50rpx;
+	padding-left: 50rpx;
+	height: 9%;/*百分比占高,为了适配Pad,若不适配Pad,可以使用单位upx,更加美观*/
+	width: 100%;
+}
+

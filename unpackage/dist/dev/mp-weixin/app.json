@@ -1,0 +1,52 @@
+{
+  "pages": [
+    "pages/Login/Login",
+    "pages/Login/LoginByMobile/LoginByMobile",
+    "pages/Content/Home/Home",
+    "pages/Content/Search/Search",
+    "pages/Content/Message/Message",
+    "pages/Content/Mine/Mine",
+    "pages/Content/Add/Add",
+    "pages/Content/Mine/ModifyNickname/ModifyNickname",
+    "pages/Content/Mine/MyMicroBlog/MyMicroBlog",
+    "pages/Content/Email/Email",
+    "pages/Content/Mine/MyMicroBlog/ModifyBlog/ModifyBlog"
+  ],
+  "subPackages": [],
+  "window": {
+    "navigationBarTextStyle": "white",
+    "navigationBarTitleText": "if",
+    "navigationBarBackgroundColor": "#2a6dfe",
+    "backgroundColor": "#F8F8F8"
+  },
+  "tabBar": {
+    "color": "#cdcdcd",
+    "selectedColor": "#39cffc",
+    "borderStyle": "white",
+    "backgroundColor": "#ffffff",
+    "list": [
+      {
+        "pagePath": "pages/Content/Home/Home",
+        "iconPath": "static/img/tabBar/home.png",
+        "selectedIconPath": "static/img/tabBar/home_select.png"
+      },
+      {
+        "pagePath": "pages/Content/Search/Search",
+        "iconPath": "static/img/tabBar/search.png",
+        "selectedIconPath": "static/img/tabBar/search_select.png"
+      },
+      {
+        "pagePath": "pages/Content/Message/Message",
+        "iconPath": "static/img/tabBar/message.png",
+        "selectedIconPath": "static/img/tabBar/message_select.png"
+      },
+      {
+        "pagePath": "pages/Content/Mine/Mine",
+        "iconPath": "static/img/tabBar/mine.png",
+        "selectedIconPath": "static/img/tabBar/mine_select.png"
+      }
+    ]
+  },
+  "usingComponents": {},
+  "sitemapLocation": "sitemap62.json"
+}

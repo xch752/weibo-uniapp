@@ -1,0 +1,23 @@
+
+.full.data-v-c02f36bc{
+	background-color: #EEEEEE;
+}
+.cu-list.menu-avatar>.cu-item.data-v-c02f36bc:after, .cu-list.menu>.cu-item.data-v-c02f36bc:after {	
+	border-bottom: 0;
+}
+.solid-bottom.data-v-c02f36bc::after {
+	border-bottom: 0;
+}
+/* 单行card的图片大小 */
+.col-1 .bg-img image.data-v-c02f36bc{
+	max-width: 70%;
+}
+.card-btn.data-v-c02f36bc{
+	width: 100rpx;
+	height: 100rpx;
+	padding: 20rpx;
+}
+.uni-more-content.data-v-c02f36bc{
+	border-bottom: 1rpx solid #f0f0f0;
+}
+

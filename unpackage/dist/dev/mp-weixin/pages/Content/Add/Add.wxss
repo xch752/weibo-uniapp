@@ -1,0 +1,65 @@
+
+.tip.data-v-c489d974{
+	float: right;
+	padding: 20rpx 20rpx 0 0;
+}
+.header.data-v-c489d974{
+	height: 80rpx;
+	background: #FFFFFF;
+	-webkit-box-shadow:0px 2px 3px 0px rgba(10,0,32,0.1);
+	        box-shadow:0px 2px 3px 0px rgba(10,0,32,0.1);
+}
+.clear.data-v-c489d974{
+	width: 150rpx;
+	height: 50rpx;
+	border-radius: 999rpx;
+	border: #EEEEEE solid 3rpx;
+}
+.submit.data-v-c489d974{
+	background: -webkit-gradient(linear, left top, right top, color-stop(33%, #6A2BF8), to(#C90CFF));
+	background: -o-linear-gradient(left, #6A2BF8 33%, #C90CFF 100%);
+	background: linear-gradient(90deg, #6A2BF8 33%, #C90CFF 100%);
+	width: 150rpx;
+	height: 50rpx;
+	border-radius: 999rpx;
+}
+.uploadimgList.data-v-c489d974{
+	display: -webkit-box;
+	display: -webkit-flex;
+	display: -ms-flexbox;
+	display: flex;
+	width: 600rpx;
+	margin: 20rpx 75rpx 20rpx 75rpx;
+	-webkit-box-orient:horizontal;
+	-webkit-box-direction:normal;
+	-webkit-flex-flow:row wrap;
+	    -ms-flex-flow:row wrap;
+	        flex-flow:row wrap;
+}
+.uploadimgList .addImg.data-v-c489d974{
+	width: 170rpx;
+	height: 170rpx;
+	margin: 15rpx;
+	border: #EEEEEE solid 3rpx;
+}
+.uploadimgList .addImg image.data-v-c489d974{
+	width: 50rpx;
+	height: 50rpx;
+	border: 0;
+}
+.uploadimgList image.data-v-c489d974{
+	width: 170rpx;
+	height: 170rpx;
+	margin: 15rpx;
+	border: #EEEEEE solid 3rpx;
+}
+
+
+.cu-btn.data-v-c489d974{
+	position: fixed;
+	bottom: 20rpx;
+	height: 80rpx;
+	width: 546rpx;
+}
+
+
