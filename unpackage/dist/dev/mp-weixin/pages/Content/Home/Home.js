@@ -73,11 +73,6 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  if (!_vm._isMounted) {
-    _vm.e0 = function($event) {
-      return this.$refs["more"].open()
-    }
-  }
 }
 var staticRenderFns = []
 render._withStripped = true
@@ -177,16 +172,6 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
-
-
-
-
-
-
-
-
-
-
 var _hydrogenJsSdk = _interopRequireDefault(__webpack_require__(/*! hydrogen-js-sdk */ 11));function _interopRequireDefault(obj) {return obj && obj.__esModule ? obj : { default: obj };}var uniPopup = function uniPopup() {return __webpack_require__.e(/*! import() | components/uni-popup/uni-popup */ "components/uni-popup/uni-popup").then(__webpack_require__.bind(null, /*! @/components/uni-popup/uni-popup.vue */ 185));};var uniNavBar = function uniNavBar() {return __webpack_require__.e(/*! import() | components/uni-nav-bar/uni-nav-bar */ "components/uni-nav-bar/uni-nav-bar").then(__webpack_require__.bind(null, /*! @/components/uni-nav-bar/uni-nav-bar.vue */ 192));};var _default =
 {
   components: { uniNavBar: uniNavBar, uniPopup: uniPopup },
@@ -195,10 +180,14 @@ var _hydrogenJsSdk = _interopRequireDefault(__webpack_require__(/*! hydrogen-js-
       isCard: true,
       blogList: [],
       isLazyLoad: true,
-      objectId: '' };
+      objectId: '',
+      pageNum: 1,
+      pageSize: 10,
+      windowHeight: 0 };
 
   },
   onLoad: function onLoad() {
+    this.getSysInfo();
     this.loadUserData();
     this.initBlogList();
   },
@@ -206,6 +195,14 @@ var _hydrogenJsSdk = _interopRequireDefault(__webpack_require__(/*! hydrogen-js-
 
   },
   methods: {
+    getSysInfo: function getSysInfo() {var _this = this;
+      uni.getSystemInfo({
+        success: function success(e) {
+          console.log(e);
+          _this.windowHeight = e.windowHeight;
+        } });
+
+    },
     loadUserData: function loadUserData() {//获取用户信息
       try {
         this.objectId = uni.getStorageSync('bmob').objectId;
@@ -236,6 +233,11 @@ var _hydrogenJsSdk = _interopRequireDefault(__webpack_require__(/*! hydrogen-js-
 
       }
     },
+    toAdd: function toAdd() {
+      uni.navigateTo({
+        url: '../Add/Add' });
+
+    },
     // 大图预览 + 保存到相册
     previewImg: function previewImg(list, index) {
       uni.previewImage({
@@ -253,7 +255,7 @@ var _hydrogenJsSdk = _interopRequireDefault(__webpack_require__(/*! hydrogen-js-
 
     },
     // 初始化首页数据
-    initBlogList: function initBlogList() {var _this = this;
+    initBlogList: function initBlogList() {var _this2 = this;
       var countNumberLike = 0;
       // 查表MicroBlog
       var query = _hydrogenJsSdk.default.Query('MicroBlog');
@@ -261,8 +263,8 @@ var _hydrogenJsSdk = _interopRequireDefault(__webpack_require__(/*! hydrogen-js-
       query.include('creator');
       // 按创建时间倒序
       query.order("-createdAt");
-      // 一次加载20条
-      query.limit(20);
+      // 一次加载pageSize条
+      query.limit(this.pageSize);
       uni.showLoading({
         title: '加载中' });
 
@@ -271,8 +273,12 @@ var _hydrogenJsSdk = _interopRequireDefault(__webpack_require__(/*! hydrogen-js-
         res_blog.map(function (item_blog, index_blog) {
           item_blog.isLike = false;
           // 分割imgList
-          if (res_blog.imgList != '') {
+          if (item_blog.imgList) {
             item_blog.imgList = item_blog.imgList.split(",");
+          }
+          // 分割tag
+          if (item_blog.tag) {
+            item_blog.tag = item_blog.tag.split(",");
           }
           // 查询点赞的关联关系
           var queryLike = _hydrogenJsSdk.default.Query('MicroBlog');
@@ -282,7 +288,7 @@ var _hydrogenJsSdk = _interopRequireDefault(__webpack_require__(/*! hydrogen-js-
             item_blog.likes = res_like;
             // 查询是否点赞这条帖子 方法一
             for (var i = 0; i < res_like.results.length; i++) {
-              if (res_like.results[i].creator.objectId == _this.objectId) {
+              if (res_like.results[i].creator.objectId == _this2.objectId) {
                 item_blog.isLike = true;
                 break;
               }
@@ -299,9 +305,9 @@ var _hydrogenJsSdk = _interopRequireDefault(__webpack_require__(/*! hydrogen-js-
             console.log('index', index_blog, 'countNumber', countNumberLike, 'result', res_like);
             countNumberLike = countNumberLike + 1;
             if (countNumberLike == res_blog.length) {
-              _this.blogList = res_blog;
+              _this2.blogList = res_blog;
               uni.hideLoading();
-              console.log('this.blogList', _this.blogList);
+              console.log('this.blogList', _this2.blogList);
             }
           });
         });
@@ -314,8 +320,77 @@ var _hydrogenJsSdk = _interopRequireDefault(__webpack_require__(/*! hydrogen-js-
         console.log(err);
       });
     },
+    // 下拉加载
+    currentChange: function currentChange(e) {var _this3 = this;
+      var countNumberLike = 0;
+      // 查表MicroBlog
+      var query = _hydrogenJsSdk.default.Query('MicroBlog');
+      // 查询详细creator
+      query.include('creator');
+      // 按创建时间倒序
+      query.order("-createdAt");
+      // 一次加载pageSize条
+      query.limit(this.pageSize);
+      // 跳过
+      query.skip(this.pageSize * this.pageNum);
+      uni.showLoading({
+        title: '加载中' });
+
+      query.find().then(function (res_blog) {
+        if (res_blog.length == 0) {
+          uni.showToast({
+            title: '没有更多了',
+            duration: 2000,
+            icon: 'none' });
+
+        } else {
+          _this3.pageNum = _this3.pageNum + 1;
+          // 数据处理
+          res_blog.map(function (item_blog, index_blog) {
+            item_blog.isLike = false;
+            // 分割imgList
+            if (item_blog.imgList) {
+              item_blog.imgList = item_blog.imgList.split(",");
+            }
+            // 分割tag
+            if (item_blog.tag) {
+              item_blog.tag = item_blog.tag.split(",");
+            }
+            // 查询点赞的关联关系
+            var queryLike = _hydrogenJsSdk.default.Query('MicroBlog');
+            queryLike.field('likes', item_blog.objectId);
+            // 查询点赞的具体的用户信息
+            queryLike.relation('Like').then(function (res_like) {
+              item_blog.likes = res_like;
+              // 查询是否点赞这条帖子 方法一
+              for (var i = 0; i < res_like.results.length; i++) {
+                if (res_like.results[i].creator.objectId == _this3.objectId) {
+                  item_blog.isLike = true;
+                  break;
+                }
+              }
+              console.log('index', index_blog, 'countNumber', countNumberLike, 'result', res_like);
+              countNumberLike = countNumberLike + 1;
+              if (countNumberLike == res_blog.length) {
+                _this3.blogList = _this3.blogList.concat(res_blog);
+                uni.hideLoading();
+                console.log('this.blogList', _this3.blogList);
+              }
+            });
+          });
+        }
+      }).catch(function (err) {
+        console.log(err);
+      });
+    },
+    upper: function upper(e) {
+      // console.log(e)
+    },
+    scroll: function scroll(e) {
+      // console.log(e)
+    },
     // 点赞
-    like: function like(itemid, index, creatorid) {var _this2 = this;
+    like: function like(itemid, index, creatorid) {var _this4 = this;
       // 关联点赞者
       var pointer = _hydrogenJsSdk.default.Pointer('_User');
       var poiID = pointer.set(this.objectId);
@@ -339,8 +414,8 @@ var _hydrogenJsSdk = _interopRequireDefault(__webpack_require__(/*! hydrogen-js-
           result.set('likes', relID); // 将Relation对象保存到likes字段中，即实现了一对多的关联
           result.save();
           console.log(result);
-          _this2.blogList[index].isLike = true;
-          _this2.blogList[index].likes.count++;
+          _this4.blogList[index].isLike = true;
+          _this4.blogList[index].likes.count++;
           uni.showToast({
             title: '点赞成功',
             duration: 2000 });
@@ -360,7 +435,7 @@ var _hydrogenJsSdk = _interopRequireDefault(__webpack_require__(/*! hydrogen-js-
       });
     },
     // 取消点赞
-    unlike: function unlike(itemid, index) {var _this3 = this;
+    unlike: function unlike(itemid, index) {var _this5 = this;
       // 查询符合条件的点赞表的记录
       var query = _hydrogenJsSdk.default.Query('Like');
       query.equalTo("creator", '===', this.objectId);
@@ -370,8 +445,8 @@ var _hydrogenJsSdk = _interopRequireDefault(__webpack_require__(/*! hydrogen-js-
         var query = _hydrogenJsSdk.default.Query('Like');
         query.destroy(res[0].objectId).then(function (result) {
           console.log(result);
-          _this3.blogList[index].isLike = false;
-          _this3.blogList[index].likes.count--;
+          _this5.blogList[index].isLike = false;
+          _this5.blogList[index].likes.count--;
           uni.showToast({
             title: '取消点赞',
             duration: 2000 });
@@ -381,16 +456,20 @@ var _hydrogenJsSdk = _interopRequireDefault(__webpack_require__(/*! hydrogen-js-
         });
       });
     },
-    // 更多popup 取消
-    cancel: function cancel(type) {
-      this.$refs[type].close();
+    // 更多弹窗
+    moreActionSheetTap: function moreActionSheetTap() {
+      uni.showActionSheet({
+        itemList: ['关注', '收藏', '举报'],
+        success: function success(e) {
+          console.log(e.tapIndex);
+        } });
+
     },
     // 位置
-    chooseLocation: function chooseLocation() {
-      uni.chooseLocation({
-        success: function success(res) {
-          console.log(res);
-        } });
+    openLocation: function openLocation(Geolocation) {
+      uni.openLocation({
+        latitude: Geolocation.latitude,
+        longitude: Geolocation.longitude });
 
     } } };exports.default = _default;
 /* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./node_modules/@dcloudio/uni-mp-weixin/dist/index.js */ 1)["default"]))

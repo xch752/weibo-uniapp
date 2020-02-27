@@ -1,7 +1,7 @@
 <template>
 	<view class="full">
-		<uni-nav-bar left-icon="plus" :status-bar="true" shadow="true" fixed="true" titleIcon="http://static.xch752.com/logo_whiteBG_256.png"></uni-nav-bar>
-		<scroll-view scroll-y >
+		<uni-nav-bar left-icon="plus" @click-left="toAdd" :status-bar="true" shadow="true" fixed="true" titleIcon="http://static.xch752.com/logo_whiteBG_256.png"></uni-nav-bar>
+		<scroll-view :style="{'height':windowHeight+'px'}" scroll-y="true" @scrolltolower="currentChange"  @scrolltoupper="upper" @scroll="scroll">
 			<view class="cu-card dynamic solid-bottom margin-bottom-sm" :class="isCard?'no-card':''" v-for="(item,index) in blogList" :key="index">
 				<view class="cu-item shadow">
 					<!-- 头像部分 -->
@@ -11,7 +11,7 @@
 							<view class="content flex-sub">
 								<view class="text-sm flex justify-between">
 									<view>{{item.creator.nickname}}</view>
-									<image style="width:60upx;height:48upx" src="../../../static/img/more.png" mode="aspectFill" @click="this.$refs['more'].open()"></image>
+									<image style="width:60upx;height:48upx" src="../../../static/img/more.png" mode="aspectFill" @click.stop="moreActionSheetTap"></image>
 								</view>
 								<view class="text-gray text-sm flex justify-between">
 									<view>{{item.createdAt}}</view>
@@ -27,14 +27,14 @@
 					<view class="grid flex-sub padding-lg" style="padding-top: 0;padding-bottom:20upx;" :class="item.imgList.length!=1?'col-3 grid-square':'col-1'" v-if="item.imgList[0]==''?false:true">
 						<view class="bg-img" :class="imgItem.length!=1?'':'only-img'"
 						 v-for="(imgItem,imgIndex) in item.imgList" :key="imgIndex">
-							<image :src="imgItem" mode="widthFix" @click="previewImg(item.imgList,imgIndex)" :lazy-load="isLazyLoad"></image>
+							<image :src="imgItem" mode="widthFix" @click.stop="previewImg(item.imgList,imgIndex)" :lazy-load="isLazyLoad"></image>
 						</view>
 					</view>
 					<!-- 按钮部分 -->
 					<view class="flex solid-bottom padding justify-between" style="padding-top: 0;padding-bottom:0upx;">
 						<view class="radius">
-							<image v-if="!item.isLike" class="card-btn" src="../../../static/img/like.png" mode="aspectFill" @click="like(item.objectId,index,item.creator.objectId)"></image>
-							<image v-if="item.isLike" class="card-btn" src="../../../static/img/islike.png" mode="aspectFill" @click="unlike(item.objectId,index)"></image>
+							<image v-if="!item.isLike" class="card-btn" src="../../../static/img/like.png" mode="aspectFill" @click.stop="like(item.objectId,index,item.creator.objectId)"></image>
+							<image v-if="item.isLike" class="card-btn" src="../../../static/img/islike.png" mode="aspectFill" @click.stop="unlike(item.objectId,index)"></image>
 							<image class="card-btn" src="../../../static/img/comment.png" mode="aspectFill"></image>
 						</view>
 						<view class="radius">
@@ -42,9 +42,8 @@
 						</view>
 					</view>
 					<!-- 标签部分 -->
-					<view class="flex justify-start padding-xl" style="flex-flow:row wrap;padding-top: 0;padding-bottom:0upx;">
-						<text class="bg-blue light round text-bold text-sm" style="padding: 5upx 30upx;margin-right:30upx">1</text>
-						<text class="bg-blue light round text-bold text-sm" style="padding: 5upx 30upx;margin-right:30upx">2</text>
+					<view v-if="item.tag" class="flex justify-start padding-xl" style="flex-flow:row wrap;padding-top: 0;padding-bottom:0upx;">
+						<text v-for="(tagItem,tagIndex) in item.tag" :key="tagIndex" class="bg-blue light round text-bold text-sm" style="padding: 5upx 30upx;margin-right:30upx">{{tagItem}}</text>
 					</view>	
 					<!-- 统计部分 -->
 					<view class="flex solid-bottom padding-xl justify-between align-center" style="padding-top: 0;padding-bottom:0upx;">
@@ -52,23 +51,14 @@
 							<view style="line-height:90upx;margin-right:50upx">{{item.likes.count}}点赞</view>
 							<view style="line-height:90upx">{{item.likes.count}}评论</view>
 						</view>
-						<view class="radius flex justify-center align-center" @click="chooseLocation">
+						<view v-if="item.Geolocation" class="radius flex justify-center align-center" @click.stop="openLocation(item.Geolocation)">
 							<image class="card-btn" src="../../../static/img/address.png" mode="aspectFill" />
-							<text class="bg-gray round text-bold text-sm" style="padding: 5upx 30upx">位置</text>
+							<text class="bg-gray round text-bold text-sm" style="padding: 5upx 30upx">{{item.Geolocation.name}}</text>
 						</view>
 					</view>
 				</view>
 			</view>
 		</scroll-view>
-		<!-- 更多弹窗 -->
-		<!-- 在非h5端不能使用ref -->
-		<uni-popup ref="more" type="bottom" :custom="true">
-			<view class="uni-more bg-gray text-center text-bold text-lg text-black">
-				<view class="uni-more-content bg-white padding" >取消关注</view>
-				<view class="uni-more-content bg-white padding" >举报</view>
-				<view class="uni-more-btn bg-white padding" style="margin-top:15upx" @click="cancel('more')">取消</view>
-			</view>
-		</uni-popup>
 	</view>
 </template>
 
@@ -83,10 +73,14 @@
 				isCard: true,
 				blogList:[],
 				isLazyLoad:true,
-				objectId:''
+				objectId:'',
+				pageNum:1,
+				pageSize:10,
+				windowHeight:0
 			}
 		},
 		onLoad() {
+			this.getSysInfo()
 			this.loadUserData()
 			this.initBlogList()
 		},
@@ -94,6 +88,14 @@
 			
 		},
 		methods: {
+			getSysInfo(){
+				uni.getSystemInfo({
+					success:(e)=>{
+						console.log(e)
+						this.windowHeight = e.windowHeight
+					}
+				})
+			},
 			loadUserData(){//获取用户信息
 				try {
 					this.objectId = uni.getStorageSync('bmob').objectId
@@ -124,6 +126,11 @@
 					})
 				}
 			},
+			toAdd(){
+				uni.navigateTo({
+					url: '../Add/Add'
+				})
+			},
 			// 大图预览 + 保存到相册
 			previewImg(list,index){
 				uni.previewImage({
@@ -149,8 +156,8 @@
 				query.include('creator')
 				// 按创建时间倒序
 				query.order("-createdAt")
-				// 一次加载20条
-				query.limit(20)
+				// 一次加载pageSize条
+				query.limit(this.pageSize)
 				uni.showLoading({
 					title: '加载中'
 				})
@@ -159,8 +166,12 @@
 					res_blog.map((item_blog,index_blog)=>{
 						item_blog.isLike = false
 						// 分割imgList
-						if(res_blog.imgList!=''){
+						if(item_blog.imgList){
 							item_blog.imgList=item_blog.imgList.split(",")
+						}
+						// 分割tag
+						if(item_blog.tag){
+							item_blog.tag=item_blog.tag.split(",")
 						}
 						// 查询点赞的关联关系
 						let queryLike = Bmob.Query('MicroBlog')
@@ -201,6 +212,75 @@
 				}).catch(err => {
 					console.log(err)
 				})
+			},
+			// 下拉加载
+			currentChange(e){
+				var countNumberLike = 0 
+				// 查表MicroBlog
+				var query = Bmob.Query('MicroBlog')
+				// 查询详细creator
+				query.include('creator')
+				// 按创建时间倒序
+				query.order("-createdAt")
+				// 一次加载pageSize条
+				query.limit(this.pageSize)
+				// 跳过
+				query.skip(this.pageSize*(this.pageNum))
+				uni.showLoading({
+					title: '加载中'
+				})
+				query.find().then(res_blog => {
+					if(res_blog.length==0){
+						uni.showToast({
+							title: '没有更多了',
+							duration: 2000,
+							icon:'none'
+						})
+					}else{
+						this.pageNum = this.pageNum+1
+						// 数据处理
+						res_blog.map((item_blog,index_blog)=>{
+							item_blog.isLike = false
+							// 分割imgList
+							if(item_blog.imgList){
+								item_blog.imgList=item_blog.imgList.split(",")
+							}
+							// 分割tag
+							if(item_blog.tag){
+								item_blog.tag=item_blog.tag.split(",")
+							}
+							// 查询点赞的关联关系
+							let queryLike = Bmob.Query('MicroBlog')
+							queryLike.field('likes',item_blog.objectId)
+							// 查询点赞的具体的用户信息
+							queryLike.relation('Like').then(res_like => {
+								item_blog.likes = res_like
+								// 查询是否点赞这条帖子 方法一
+								for(var i = 0; i < res_like.results.length; i++){
+									if(res_like.results[i].creator.objectId == this.objectId){
+										item_blog.isLike = true
+										break
+									}
+								}
+								console.log('index',index_blog,'countNumber',countNumberLike,'result',res_like)
+								countNumberLike = countNumberLike + 1
+								if(countNumberLike == res_blog.length){
+									this.blogList=this.blogList.concat(res_blog)
+									uni.hideLoading()
+									console.log('this.blogList',this.blogList)
+								}
+							})
+						})
+					}
+				}).catch(err => {
+					console.log(err)
+				})
+			},
+			upper: function(e) {
+				// console.log(e)
+			},
+			scroll: function(e) {
+				// console.log(e)
 			},
 			// 点赞
 			like(itemid,index,creatorid){
@@ -269,16 +349,20 @@
 					})
 				})
 			},
-			// 更多popup 取消
-			cancel(type) {
-				this.$refs[type].close()
+			// 更多弹窗
+			moreActionSheetTap() {
+				uni.showActionSheet({
+					itemList: ['关注', '收藏', '举报'],
+					success: (e) => {
+						console.log(e.tapIndex);
+					}
+				})
 			},
 			// 位置
-			chooseLocation () {
-				uni.chooseLocation({
-					success: (res) => {
-						console.log(res)
-					}
+			openLocation (Geolocation) {
+				uni.openLocation({
+					latitude: Geolocation.latitude,
+					longitude: Geolocation.longitude
 				})
 			}
 		}

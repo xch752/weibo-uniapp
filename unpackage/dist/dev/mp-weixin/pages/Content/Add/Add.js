@@ -73,6 +73,15 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
+  if (!_vm._isMounted) {
+    _vm.e0 = function($event) {
+      _vm.tagAddShow = true
+    }
+
+    _vm.e1 = function($event) {
+      _vm.tagAddShow = false
+    }
+  }
 }
 var staticRenderFns = []
 render._withStripped = true
@@ -106,6 +115,23 @@ __webpack_require__.r(__webpack_exports__);
 
 "use strict";
 /* WEBPACK VAR INJECTION */(function(uni) {Object.defineProperty(exports, "__esModule", { value: true });exports.default = void 0;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -204,10 +230,67 @@ var _qiniuUploader = _interopRequireDefault(__webpack_require__(/*! ../../../uti
 //
 //
 //
-var _default = { data: function data() {return { bodyValue: '', //body
-      imgList: [], isAddTrue: true, objectId: '', token: '', imgListUrl: [] };}, onLoad: function onLoad() {this.loadUserData();this.initQiniu();}, onShow: function onShow() {this.loadUserData();}, methods: { loadUserData: function loadUserData() {//获取用户信息
-      var THAT = this;var current = _hydrogenJsSdk.default.User.current(); //获取登陆用户信息
-      if (!current) {uni.reLaunch({ url: '../login/login' });} else {THAT.objectId = current.objectId;}}, initQiniu: function initQiniu() {var token;var policy = {};var bucketName = 'xch752';var AK = 'T0c0qxTfHE07tX8QdKxtSaBAvaj6J5b_-HlQYTgf';var SK = 'bT-PoAdQusOcadeX3ELoFPRGDKJHr8d8kYBmBQ5X';var deadline = Math.round(new Date().getTime() / 1000) + 3600;policy.scope = bucketName;policy.deadline = deadline;token = (0, _qiniuToken.genUpToken)(AK, SK, policy);this.token = token;}, clearAll: function clearAll() {this.bodyValue = '';this.imgList = [];this.isAddTrue = true;this.imgListUrl = [];}, submitMSG: function submitMSG() {var THAT = this;
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+var uniNavBar = function uniNavBar() {return __webpack_require__.e(/*! import() | components/uni-nav-bar/uni-nav-bar */ "components/uni-nav-bar/uni-nav-bar").then(__webpack_require__.bind(null, /*! @/components/uni-nav-bar/uni-nav-bar.vue */ 192));};var hFormAlert = function hFormAlert() {return __webpack_require__.e(/*! import() | components/h-form-alert/h-form-alert */ "components/h-form-alert/h-form-alert").then(__webpack_require__.bind(null, /*! @/components/h-form-alert/h-form-alert.vue */ 228));};var _default = { components: { uniNavBar: uniNavBar, hFormAlert: hFormAlert }, data: function data() {return { // 用户ID
+      objectId: '', // 七牛token
+      token: '', // 内容
+      bodyValue: '', //body
+      // 图片
+      imgList: [], // 图片链接
+      imgListUrl: [], // 地理位置
+      geolocation: {}, // 视频
+      videoSrc: '', // 视频链接
+      videoSrcUrl: '', // 标签
+      tag: [], // tagAdd弹窗
+      tagAddShow: false, // 分区
+      partArray: [], index: 0 };}, onLoad: function onLoad() {this.loadUserData();this.initQiniu();this.initPartArray();}, methods: { loadUserData: function loadUserData() {//获取用户信息
+      try {this.objectId = uni.getStorageSync('bmob').objectId;if (!this.objectId) {uni.reLaunch({ url: '../../Login/Login', success: function success() {uni.showToast({ title: '登录过期', duration: 2000, icon: 'none' });} });}} catch (e) {// error
+        console.log(e);uni.reLaunch({ url: '../../Login/Login', success: function success() {uni.showToast({ title: '登录过期', duration: 2000, icon: 'none' });} });}}, // 返回
+    navBack: function navBack() {uni.navigateBack({ delta: 1 });}, // 获取分区信息
+    initPartArray: function initPartArray() {var _this = this;var query = _hydrogenJsSdk.default.Query("Parts");query.find().then(function (res) {console.log(res);_this.partArray = res;});},
+    // 新增标签
+    addTag: function addTag(res) {
+      console.log(res);
+      if (res.tagName !== '') {
+        this.tag.push(res.tagName);
+        this.tagAddShow = false;
+      }
+    },
+    // picker
+    bindPickerChange: function bindPickerChange(e) {
+      this.index = e.target.value;
+    },
+    // 七牛token初始化
+    initQiniu: function initQiniu() {
+      var token;
+      var policy = {};
+      var bucketName = 'xch752';
+      var AK = 'T0c0qxTfHE07tX8QdKxtSaBAvaj6J5b_-HlQYTgf';
+      var SK = 'bT-PoAdQusOcadeX3ELoFPRGDKJHr8d8kYBmBQ5X';
+      var deadline = Math.round(new Date().getTime() / 1000) + 3600;
+      policy.scope = bucketName;
+      policy.deadline = deadline;
+      token = (0, _qiniuToken.genUpToken)(AK, SK, policy);
+      this.token = token;
+    },
+    // 发布
+    submitMSG: function submitMSG() {
       if (!this.bodyValue && this.imgList.length == 0) {
         uni.showModal({
           title: '提示',
@@ -215,21 +298,25 @@ var _default = { data: function data() {return { bodyValue: '', //body
           showCancel: false });
 
       } else {
-        console.log(THAT.imgListUrl.join());
+        // 创建用户对象
         var pointer = _hydrogenJsSdk.default.Pointer('_User');
-        var poiID = pointer.set(THAT.objectId);
-
+        var poiID = pointer.set(this.objectId);
         var query = _hydrogenJsSdk.default.Query('MicroBlog');
-        query.set("imgList", THAT.imgListUrl.join());
-        query.set("content", THAT.bodyValue);
+        query.set("imgList", this.imgListUrl.join());
+        query.set("content", this.bodyValue);
         query.set("creator", poiID);
+        query.set("Geolocation", this.geolocation);
+        query.set("tag", this.tag.join());
+        query.set("part", this.partArray[this.index].partIndex);
         query.save().then(function (res) {
           uni.showModal({
             title: '提示',
             content: '发布成功',
             showCancel: false,
             complete: function complete() {
-              THAT.clearAll();
+              uni.navigateBack({
+                delta: 1 });
+
             } });
 
           console.log(res);
@@ -238,6 +325,7 @@ var _default = { data: function data() {return { bodyValue: '', //body
         });
       }
     },
+    // 选择图片
     chooseImg: function chooseImg() {
       var THAT = this;
       uni.chooseImage({
@@ -255,8 +343,8 @@ var _default = { data: function data() {return { bodyValue: '', //body
               console.log('error: ' + error);
             }, {
               region: 'SCN',
-              domain: 'http://pxcfst1g4.bkt.clouddn.com', // // bucket 域名，下载资源时用到。如果设置，会在 success callback 的 res 参数加上可以直接使用的 ImageURL 字段。否则需要自己拼接
-              key: '', // [非必须]自定义文件 key。如果不设置，默认为使用微信小程序 API 的临时文件名
+              domain: 'http://static.xch752.com', // // bucket 域名，下载资源时用到。如果设置，会在 success callback 的 res 参数加上可以直接使用的 ImageURL 字段。否则需要自己拼接
+              key: "MicroBlog/".concat(THAT.objectId, "/").concat(THAT.randomWord(true, 20, 20)), // [非必须]自定义文件 key。如果不设置，默认为使用微信小程序 API 的临时文件名
               // 以下方法三选一即可，优先级为：uptoken > uptokenURL > uptokenFunc
               uptoken: THAT.token // 由其他程序生成七牛 uptoken
             }, function (res) {
@@ -283,9 +371,6 @@ var _default = { data: function data() {return { bodyValue: '', //body
               // `complete` 上传接受后执行的操作(无论成功还是失败都执行)
             });
           }
-          if (THAT.imgList.length >= 9) {
-            THAT.isAddTrue = false;
-          }
           console.log(THAT.imgList);
         },
         fail: function fail(err) {
@@ -293,14 +378,38 @@ var _default = { data: function data() {return { bodyValue: '', //body
         } });
 
     },
+    // 删除图片
     deleteImg: function deleteImg(index) {
       this.imgList.splice(index, 1);
       this.imgListUrl.splice(index, 1);
-      if (this.imgList.length < 9) {
-        this.isAddTrue = true;
-      } else {
-        this.isAddTrue = false;
+    },
+    // 删除TAG
+    deleteTag: function deleteTag(index) {
+      this.tag.splice(index, 1);
+    },
+    // 选择位置
+    chooseLocation: function chooseLocation() {var _this2 = this;
+      uni.chooseLocation({
+        success: function success(res) {
+          _this2.geolocation = res;
+        } });
+
+    },
+    // 随机KEY
+    randomWord: function randomWord(randomFlag, min, max) {
+      var str = "",
+      range = min,
+      arr = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z', 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'];
+
+      // 随机产生
+      if (randomFlag) {
+        range = Math.round(Math.random() * (max - min)) + min;
       }
+      for (var i = 0; i < range; i++) {
+        var pos = Math.round(Math.random() * (arr.length - 1));
+        str += arr[pos];
+      }
+      return str;
     } } };exports.default = _default;
 /* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./node_modules/@dcloudio/uni-mp-weixin/dist/index.js */ 1)["default"]))
 

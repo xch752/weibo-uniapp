@@ -15,12 +15,12 @@
 					<slot name="left" />
 				</view>
 				<view class="uni-navbar__header-container uni-navbar__content_view">
-					<!-- <view class="uni-navbar__header-container-inner uni-navbar__content_view" v-if="title.length">
+					<view class="uni-navbar__header-container-inner uni-navbar__content_view" v-if="title.length">
 						<text class="uni-nav-bar-text" :style="{color: color }">{{ title }}</text>
-					</view> -->
+					</view>
 					<!-- 标题插槽 -->
-					<!-- <slot /> -->
-					<view class="uni-navbar__header-container-inner uni-navbar__content_view">
+					<slot />
+					<view class="uni-navbar__header-container-inner uni-navbar__content_view" v-if="titleIcon">
 						<image class="uni-nav-bar-icon" :src="titleIcon" mode="aspectFit"/>
 					</view>
 					<!-- Icon插槽 -->

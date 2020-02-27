@@ -45,7 +45,8 @@
         {
             "path" : "pages/Content/Add/Add",
             "style": {
-				"navigationBarTitleText": "发微博"
+				"navigationBarTitleText": "发微博",
+            	"navigationStyle": "custom"
             }
         }
         ,{
@@ -112,6 +113,10 @@
 			{
 				"name": "SignByMobile",
 				"path": "pages/Login/LoginByMobile/LoginByMobile"
+			},
+			{
+				"name": "Add",
+				"path": "pages/Content/Add/Add"
 			}
 		]
 	}
