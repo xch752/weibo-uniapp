@@ -35,6 +35,11 @@
           "name": "Add",
           "id": 1,
           "pathName": "pages/Content/Add/Add"
+        },
+        {
+          "name": "MicroBlog",
+          "id": 2,
+          "pathName": "pages/Content/MicroBlog/MicroBlog"
         }
       ]
     }

@@ -73,6 +73,10 @@
 				"navigationBarTitleText": "编辑微博"
 			}
         }
+        ,{
+            "path" : "pages/Content/MicroBlog/MicroBlog",
+            "style" : {}
+        }
     ],
 	"globalStyle": {
 		"navigationBarTextStyle": "white",
@@ -117,6 +121,10 @@
 			{
 				"name": "Add",
 				"path": "pages/Content/Add/Add"
+			},
+			{
+				"name": "MicroBlog",
+				"path": "pages/Content/MicroBlog/MicroBlog"
 			}
 		]
 	}

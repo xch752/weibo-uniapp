@@ -195,6 +195,7 @@ var _hydrogenJsSdk = _interopRequireDefault(__webpack_require__(/*! hydrogen-js-
 
   },
   methods: {
+    // 获取屏幕高度
     getSysInfo: function getSysInfo() {var _this = this;
       uni.getSystemInfo({
         success: function success(e) {
@@ -238,6 +239,11 @@ var _hydrogenJsSdk = _interopRequireDefault(__webpack_require__(/*! hydrogen-js-
         url: '../Add/Add' });
 
     },
+    toMicroBlog: function toMicroBlog(id) {
+      uni.navigateTo({
+        url: "../MicroBlog/MicroBlog?objectId=".concat(id) });
+
+    },
     // 大图预览 + 保存到相册
     previewImg: function previewImg(list, index) {
       uni.previewImage({
@@ -257,6 +263,7 @@ var _hydrogenJsSdk = _interopRequireDefault(__webpack_require__(/*! hydrogen-js-
     // 初始化首页数据
     initBlogList: function initBlogList() {var _this2 = this;
       var countNumberLike = 0;
+      var countNumberComment = 0;
       // 查表MicroBlog
       var query = _hydrogenJsSdk.default.Query('MicroBlog');
       // 查询详细creator
@@ -272,6 +279,7 @@ var _hydrogenJsSdk = _interopRequireDefault(__webpack_require__(/*! hydrogen-js-
         // 数据处理
         res_blog.map(function (item_blog, index_blog) {
           item_blog.isLike = false;
+          item_blog.createdAt = _this2.calcTimeHeader(item_blog.createdAt);
           // 分割imgList
           if (item_blog.imgList) {
             item_blog.imgList = item_blog.imgList.split(",");
@@ -302,20 +310,28 @@ var _hydrogenJsSdk = _interopRequireDefault(__webpack_require__(/*! hydrogen-js-
             // 		}
             // 	})
             //   }
-            console.log('index', index_blog, 'countNumber', countNumberLike, 'result', res_like);
+            // console.log('index',index_blog,'countNumber',countNumberLike,'result',res_like)
             countNumberLike = countNumberLike + 1;
-            if (countNumberLike == res_blog.length) {
+            if (countNumberLike == res_blog.length && countNumberComment == res_blog.length) {
+              _this2.blogList = res_blog;
+              uni.hideLoading();
+              console.log('this.blogList', _this2.blogList);
+            }
+          });
+          // 查询评论的关联关系
+          var queryComment = _hydrogenJsSdk.default.Query('MicroBlog');
+          queryComment.field('comments', item_blog.objectId);
+          // 查询评论的具体用户信息
+          queryComment.relation('Comment').then(function (res_comment) {
+            item_blog.comments = res_comment;
+            countNumberComment = countNumberComment + 1;
+            if (countNumberLike == res_blog.length && countNumberComment == res_blog.length) {
               _this2.blogList = res_blog;
               uni.hideLoading();
               console.log('this.blogList', _this2.blogList);
             }
           });
         });
-        // 数据赋值
-        // setTimeout(()=>{
-        // 	THAT.blogList=res;
-        // 	console.log(THAT.blogList)
-        // },0)
       }).catch(function (err) {
         console.log(err);
       });
@@ -323,6 +339,7 @@ var _hydrogenJsSdk = _interopRequireDefault(__webpack_require__(/*! hydrogen-js-
     // 下拉加载
     currentChange: function currentChange(e) {var _this3 = this;
       var countNumberLike = 0;
+      var countNumberComment = 0;
       // 查表MicroBlog
       var query = _hydrogenJsSdk.default.Query('MicroBlog');
       // 查询详细creator
@@ -369,9 +386,22 @@ var _hydrogenJsSdk = _interopRequireDefault(__webpack_require__(/*! hydrogen-js-
                   break;
                 }
               }
-              console.log('index', index_blog, 'countNumber', countNumberLike, 'result', res_like);
+              // console.log('index',index_blog,'countNumber',countNumberLike,'result',res_like)
               countNumberLike = countNumberLike + 1;
-              if (countNumberLike == res_blog.length) {
+              if (countNumberLike == res_blog.length && countNumberComment == res_blog.length) {
+                _this3.blogList = _this3.blogList.concat(res_blog);
+                uni.hideLoading();
+                console.log('this.blogList', _this3.blogList);
+              }
+            });
+            // 查询评论的关联关系
+            var queryComment = _hydrogenJsSdk.default.Query('MicroBlog');
+            queryComment.field('comments', item_blog.objectId);
+            // 查询评论的具体用户信息
+            queryComment.relation('Comment').then(function (res_comment) {
+              item_blog.comments = res_comment;
+              countNumberComment = countNumberComment + 1;
+              if (countNumberLike == res_blog.length && countNumberComment == res_blog.length) {
                 _this3.blogList = _this3.blogList.concat(res_blog);
                 uni.hideLoading();
                 console.log('this.blogList', _this3.blogList);
@@ -471,6 +501,35 @@ var _hydrogenJsSdk = _interopRequireDefault(__webpack_require__(/*! hydrogen-js-
         latitude: Geolocation.latitude,
         longitude: Geolocation.longitude });
 
+    },
+    calcTimeHeader: function calcTimeHeader(time) {
+      // 格式化传入时间
+      var date = new Date(time),
+      year = date.getUTCFullYear(),
+      month = date.getUTCMonth(),
+      day = date.getDate(),
+      hour = date.getHours(),
+      minute = date.getUTCMinutes();
+      // 获取当前时间
+      var currentDate = new Date(),
+      currentYear = date.getUTCFullYear(),
+      currentMonth = date.getUTCMonth(),
+      currentDay = currentDate.getDate();
+      // 计算是否是同一天
+      if (currentYear == year && currentMonth == month && currentDay == day) {//同一天直接返回
+        if (hour > 12) {
+          return "\u4E0B\u5348 ".concat(hour, ":").concat(minute < 10 ? '0' + minute : minute);
+        } else {
+          return "\u4E0A\u5348 ".concat(hour, ":").concat(minute < 10 ? '0' + minute : minute);
+        }
+      }
+      // 计算是否是昨天
+      var yesterday = new Date(currentDate - 24 * 3600 * 1000);
+      if (year == yesterday.getUTCFullYear() && month == yesterday.getUTCMonth && day == yesterday.getDate()) {//昨天
+        return "\u6628\u5929 ".concat(hour, ":").concat(minute < 10 ? '0' + minute : minute);
+      } else {
+        return "".concat(year, "-").concat(month + 1, "-").concat(day, " ").concat(hour, ":").concat(minute < 10 ? '0' + minute : minute);
+      }
     } } };exports.default = _default;
 /* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./node_modules/@dcloudio/uni-mp-weixin/dist/index.js */ 1)["default"]))
 

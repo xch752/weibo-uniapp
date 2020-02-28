@@ -1,8 +1,8 @@
 <template>
 	<view class="full">
 		<uni-nav-bar left-icon="plus" @click-left="toAdd" :status-bar="true" shadow="true" fixed="true" titleIcon="http://static.xch752.com/logo_whiteBG_256.png"></uni-nav-bar>
-		<scroll-view :style="{'height':windowHeight+'px'}" scroll-y="true" @scrolltolower="currentChange"  @scrolltoupper="upper" @scroll="scroll">
-			<view class="cu-card dynamic solid-bottom margin-bottom-sm" :class="isCard?'no-card':''" v-for="(item,index) in blogList" :key="index">
+		<scroll-view :style="{'height':windowHeight+'px'}" scroll-y="true" @scrolltolower="currentChange"  @scrolltoupper="upper" @scroll="scroll" >
+			<view class="cu-card dynamic solid-bottom margin-bottom-sm" :class="isCard?'no-card':''" v-for="(item,index) in blogList" :key="index" @click="toMicroBlog(item.objectId)">
 				<view class="cu-item shadow">
 					<!-- 头像部分 -->
 					<view class="cu-list menu-avatar">
@@ -49,10 +49,10 @@
 					<view class="flex solid-bottom padding-xl justify-between align-center" style="padding-top: 0;padding-bottom:0upx;">
 						<view class="radius flex justify-center align-center" >
 							<view style="line-height:90upx;margin-right:50upx">{{item.likes.count}}点赞</view>
-							<view style="line-height:90upx">{{item.likes.count}}评论</view>
+							<view style="line-height:90upx">{{item.comments.count}}评论</view>
 						</view>
 						<view v-if="item.Geolocation" class="radius flex justify-center align-center" @click.stop="openLocation(item.Geolocation)">
-							<image class="card-btn" src="../../../static/img/address.png" mode="aspectFill" />
+							<image class="card-btn" style="width:80upx;height:80upx" src="../../../static/img/address.png" mode="aspectFill" />
 							<text class="bg-gray round text-bold text-sm" style="padding: 5upx 30upx">{{item.Geolocation.name}}</text>
 						</view>
 					</view>
@@ -88,6 +88,7 @@
 			
 		},
 		methods: {
+			// 获取屏幕高度
 			getSysInfo(){
 				uni.getSystemInfo({
 					success:(e)=>{
@@ -131,6 +132,11 @@
 					url: '../Add/Add'
 				})
 			},
+			toMicroBlog(id){
+				uni.navigateTo({
+					url: `../MicroBlog/MicroBlog?objectId=${id}`
+				})
+			},
 			// 大图预览 + 保存到相册
 			previewImg(list,index){
 				uni.previewImage({
@@ -150,6 +156,7 @@
 			// 初始化首页数据
 			initBlogList(){
 				var countNumberLike = 0 
+				var countNumberComment = 0 
 				// 查表MicroBlog
 				var query = Bmob.Query('MicroBlog')
 				// 查询详细creator
@@ -165,6 +172,7 @@
 					// 数据处理
 					res_blog.map((item_blog,index_blog)=>{
 						item_blog.isLike = false
+						item_blog.createdAt = this.calcTimeHeader(item_blog.createdAt)
 						// 分割imgList
 						if(item_blog.imgList){
 							item_blog.imgList=item_blog.imgList.split(",")
@@ -195,20 +203,28 @@
 							// 		}
 							// 	})
 							//   }
-							console.log('index',index_blog,'countNumber',countNumberLike,'result',res_like)
+							// console.log('index',index_blog,'countNumber',countNumberLike,'result',res_like)
 							countNumberLike = countNumberLike + 1
-							if(countNumberLike == res_blog.length){
+							if(countNumberLike == res_blog.length && countNumberComment == res_blog.length){
+								this.blogList=res_blog
+								uni.hideLoading()
+								console.log('this.blogList',this.blogList)
+							}
+						})
+						// 查询评论的关联关系
+						let queryComment = Bmob.Query('MicroBlog')
+						queryComment.field('comments',item_blog.objectId)
+						// 查询评论的具体用户信息
+						queryComment.relation('Comment').then(res_comment => {
+							item_blog.comments = res_comment
+							countNumberComment = countNumberComment + 1
+							if(countNumberLike == res_blog.length && countNumberComment == res_blog.length){
 								this.blogList=res_blog
 								uni.hideLoading()
 								console.log('this.blogList',this.blogList)
 							}
 						})
 					})
-					// 数据赋值
-					// setTimeout(()=>{
-					// 	THAT.blogList=res;
-					// 	console.log(THAT.blogList)
-					// },0)
 				}).catch(err => {
 					console.log(err)
 				})
@@ -216,6 +232,7 @@
 			// 下拉加载
 			currentChange(e){
 				var countNumberLike = 0 
+				var countNumberComment = 0 
 				// 查表MicroBlog
 				var query = Bmob.Query('MicroBlog')
 				// 查询详细creator
@@ -262,9 +279,22 @@
 										break
 									}
 								}
-								console.log('index',index_blog,'countNumber',countNumberLike,'result',res_like)
+								// console.log('index',index_blog,'countNumber',countNumberLike,'result',res_like)
 								countNumberLike = countNumberLike + 1
-								if(countNumberLike == res_blog.length){
+								if(countNumberLike == res_blog.length && countNumberComment == res_blog.length){
+									this.blogList=this.blogList.concat(res_blog)
+									uni.hideLoading()
+									console.log('this.blogList',this.blogList)
+								}
+							})
+							// 查询评论的关联关系
+							let queryComment = Bmob.Query('MicroBlog')
+							queryComment.field('comments',item_blog.objectId)
+							// 查询评论的具体用户信息
+							queryComment.relation('Comment').then(res_comment => {
+								item_blog.comments = res_comment
+								countNumberComment = countNumberComment + 1
+								if(countNumberLike == res_blog.length && countNumberComment == res_blog.length){
 									this.blogList=this.blogList.concat(res_blog)
 									uni.hideLoading()
 									console.log('this.blogList',this.blogList)
@@ -364,6 +394,35 @@
 					latitude: Geolocation.latitude,
 					longitude: Geolocation.longitude
 				})
+			},
+			calcTimeHeader(time) {
+			  // 格式化传入时间
+			  let date = new Date(time),
+			    year = date.getUTCFullYear(),
+			    month = date.getUTCMonth(),
+			    day = date.getDate(),
+			    hour = date.getHours(),
+			    minute = date.getUTCMinutes()
+			  // 获取当前时间
+			  let currentDate = new Date(),
+			    currentYear = date.getUTCFullYear(),
+			    currentMonth = date.getUTCMonth(),
+			    currentDay = currentDate.getDate()
+			  // 计算是否是同一天
+			  if (currentYear == year && currentMonth == month && currentDay == day) {//同一天直接返回
+			    if (hour > 12) {
+			      return `下午 ${hour}:${minute < 10 ? '0' + minute : minute}`
+			    } else {
+			      return `上午 ${hour}:${minute < 10 ? '0' + minute : minute}`
+			    }
+			  }
+			  // 计算是否是昨天
+			  let yesterday = new Date(currentDate - 24 * 3600 * 1000)
+			  if (year == yesterday.getUTCFullYear() && month == yesterday.getUTCMonth && day == yesterday.getDate()) {//昨天
+			    return `昨天 ${hour}:${minute < 10 ? '0' + minute : minute}`
+			  } else {
+			    return `${year}-${month + 1}-${day} ${hour}:${minute < 10 ? '0' + minute : minute}`
+			  }
 			}
 		}
 	}
