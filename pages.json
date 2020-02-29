@@ -77,6 +77,20 @@
             "path" : "pages/Content/MicroBlog/MicroBlog",
             "style" : {}
         }
+        ,{
+            "path" : "pages/Content/Comment/Comment",
+            "style" : {
+				"navigationBarTitleText": "评论",
+            	"navigationStyle": "custom"
+			}
+        }
+        ,{
+            "path" : "pages/Content/Like/Like",
+            "style" : {
+				"navigationBarTitleText": "点赞",
+            	"navigationStyle": "custom"
+			}
+        }
     ],
 	"globalStyle": {
 		"navigationBarTextStyle": "white",
@@ -125,6 +139,16 @@
 			{
 				"name": "MicroBlog",
 				"path": "pages/Content/MicroBlog/MicroBlog"
+			},
+			{
+				"name": "Comment",
+				"path": "pages/Content/Comment/Comment",
+				"query": "microBlogId=12da62f938"
+			},
+			{
+				"name": "Like",
+				"path": "pages/Content/Like/Like",
+				"query": "microBlogId=12da62f938"
 			}
 		]
 	}

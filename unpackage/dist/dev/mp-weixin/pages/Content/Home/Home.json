@@ -3,6 +3,6 @@
   "navigationStyle": "custom",
   "usingComponents": {
     "uni-nav-bar": "/components/uni-nav-bar/uni-nav-bar",
-    "uni-popup": "/components/uni-popup/uni-popup"
+    "h-form-alert": "/components/h-form-alert/h-form-alert"
   }
 }

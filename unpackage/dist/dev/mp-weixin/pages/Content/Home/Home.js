@@ -171,10 +171,10 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
+var _hydrogenJsSdk = _interopRequireDefault(__webpack_require__(/*! hydrogen-js-sdk */ 11));function _interopRequireDefault(obj) {return obj && obj.__esModule ? obj : { default: obj };}var uniNavBar = function uniNavBar() {return __webpack_require__.e(/*! import() | components/uni-nav-bar/uni-nav-bar */ "components/uni-nav-bar/uni-nav-bar").then(__webpack_require__.bind(null, /*! @/components/uni-nav-bar/uni-nav-bar.vue */ 197));};var hFormAlert = function hFormAlert() {return __webpack_require__.e(/*! import() | components/h-form-alert/h-form-alert */ "components/h-form-alert/h-form-alert").then(__webpack_require__.bind(null, /*! @/components/h-form-alert/h-form-alert.vue */ 204));};var _default =
 
-var _hydrogenJsSdk = _interopRequireDefault(__webpack_require__(/*! hydrogen-js-sdk */ 11));function _interopRequireDefault(obj) {return obj && obj.__esModule ? obj : { default: obj };}var uniPopup = function uniPopup() {return __webpack_require__.e(/*! import() | components/uni-popup/uni-popup */ "components/uni-popup/uni-popup").then(__webpack_require__.bind(null, /*! @/components/uni-popup/uni-popup.vue */ 185));};var uniNavBar = function uniNavBar() {return __webpack_require__.e(/*! import() | components/uni-nav-bar/uni-nav-bar */ "components/uni-nav-bar/uni-nav-bar").then(__webpack_require__.bind(null, /*! @/components/uni-nav-bar/uni-nav-bar.vue */ 192));};var _default =
 {
-  components: { uniNavBar: uniNavBar, uniPopup: uniPopup },
+  components: { uniNavBar: uniNavBar, hFormAlert: hFormAlert },
   data: function data() {
     return {
       isCard: true,
@@ -244,6 +244,16 @@ var _hydrogenJsSdk = _interopRequireDefault(__webpack_require__(/*! hydrogen-js-
         url: "../MicroBlog/MicroBlog?objectId=".concat(id) });
 
     },
+    toComment: function toComment(objectId) {
+      uni.navigateTo({
+        url: "../Comment/Comment?microBlogId=".concat(objectId) });
+
+    },
+    toLike: function toLike(objectId) {
+      uni.navigateTo({
+        url: "../Like/Like?microBlogId=".concat(objectId) });
+
+    },
     // 大图预览 + 保存到相册
     previewImg: function previewImg(list, index) {
       uni.previewImage({
@@ -279,7 +289,7 @@ var _hydrogenJsSdk = _interopRequireDefault(__webpack_require__(/*! hydrogen-js-
         // 数据处理
         res_blog.map(function (item_blog, index_blog) {
           item_blog.isLike = false;
-          item_blog.createdAt = _this2.calcTimeHeader(item_blog.createdAt);
+          item_blog.createdAt = _this2.getDateDiff(item_blog.createdAt);
           // 分割imgList
           if (item_blog.imgList) {
             item_blog.imgList = item_blog.imgList.split(",");
@@ -301,16 +311,6 @@ var _hydrogenJsSdk = _interopRequireDefault(__webpack_require__(/*! hydrogen-js-
                 break;
               }
             }
-            // 查询是否点赞这条帖子 方法二
-            //   if(result.results.length!=0){
-            // 	result.results.map(cur => {
-            // 		console.log(cur,_THAT.objectId)
-            // 		if(cur.creator.objectId == _THAT.objectId){
-            // 			currentValue.isLike = true
-            // 		}
-            // 	})
-            //   }
-            // console.log('index',index_blog,'countNumber',countNumberLike,'result',res_like)
             countNumberLike = countNumberLike + 1;
             if (countNumberLike == res_blog.length && countNumberComment == res_blog.length) {
               _this2.blogList = res_blog;
@@ -365,6 +365,7 @@ var _hydrogenJsSdk = _interopRequireDefault(__webpack_require__(/*! hydrogen-js-
           // 数据处理
           res_blog.map(function (item_blog, index_blog) {
             item_blog.isLike = false;
+            item_blog.createdAt = _this3.getDateDiff(item_blog.createdAt);
             // 分割imgList
             if (item_blog.imgList) {
               item_blog.imgList = item_blog.imgList.split(",");
@@ -412,9 +413,6 @@ var _hydrogenJsSdk = _interopRequireDefault(__webpack_require__(/*! hydrogen-js-
       }).catch(function (err) {
         console.log(err);
       });
-    },
-    upper: function upper(e) {
-      // console.log(e)
     },
     scroll: function scroll(e) {
       // console.log(e)
@@ -502,34 +500,44 @@ var _hydrogenJsSdk = _interopRequireDefault(__webpack_require__(/*! hydrogen-js-
         longitude: Geolocation.longitude });
 
     },
-    calcTimeHeader: function calcTimeHeader(time) {
-      // 格式化传入时间
-      var date = new Date(time),
-      year = date.getUTCFullYear(),
-      month = date.getUTCMonth(),
-      day = date.getDate(),
-      hour = date.getHours(),
-      minute = date.getUTCMinutes();
-      // 获取当前时间
-      var currentDate = new Date(),
-      currentYear = date.getUTCFullYear(),
-      currentMonth = date.getUTCMonth(),
-      currentDay = currentDate.getDate();
-      // 计算是否是同一天
-      if (currentYear == year && currentMonth == month && currentDay == day) {//同一天直接返回
-        if (hour > 12) {
-          return "\u4E0B\u5348 ".concat(hour, ":").concat(minute < 10 ? '0' + minute : minute);
-        } else {
-          return "\u4E0A\u5348 ".concat(hour, ":").concat(minute < 10 ? '0' + minute : minute);
-        }
+    // 时间格式化
+    getDateDiff: function getDateDiff(dateTimeStamp) {
+      // 时间字符串转时间戳
+      var timestamp = new Date(dateTimeStamp).getTime();
+
+      var minute = 1000 * 60;
+      var hour = minute * 60;
+      var day = hour * 24;
+      var halfamonth = day * 15;
+      var month = day * 30;
+      var year = day * 365;
+      var now = new Date().getTime();
+      var diffValue = now - timestamp;
+      var result;
+      if (diffValue < 0) {
+        return;
       }
-      // 计算是否是昨天
-      var yesterday = new Date(currentDate - 24 * 3600 * 1000);
-      if (year == yesterday.getUTCFullYear() && month == yesterday.getUTCMonth && day == yesterday.getDate()) {//昨天
-        return "\u6628\u5929 ".concat(hour, ":").concat(minute < 10 ? '0' + minute : minute);
-      } else {
-        return "".concat(year, "-").concat(month + 1, "-").concat(day, " ").concat(hour, ":").concat(minute < 10 ? '0' + minute : minute);
-      }
+      var yearC = diffValue / year;
+      var monthC = diffValue / month;
+      var weekC = diffValue / (7 * day);
+      var dayC = diffValue / day;
+      var hourC = diffValue / hour;
+      var minC = diffValue / minute;
+      if (yearC >= 1) {
+        result = dateTimeStamp;
+      } else if (monthC >= 1) {
+        result = dateTimeStamp;
+      } else if (weekC >= 1) {
+        result = dateTimeStamp;
+      } else if (dayC >= 1) {
+        result = "" + parseInt(dayC) + "天前";
+      } else if (hourC >= 1) {
+        result = "" + parseInt(hourC) + "小时前";
+      } else if (minC >= 1) {
+        result = "" + parseInt(minC) + "分钟前";
+      } else
+      result = "刚刚";
+      return result;
     } } };exports.default = _default;
 /* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./node_modules/@dcloudio/uni-mp-weixin/dist/index.js */ 1)["default"]))
 

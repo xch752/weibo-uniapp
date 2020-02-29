@@ -19686,13 +19686,43 @@ createPage(_ModifyBlog.default);
 /* 182 */,
 /* 183 */,
 /* 184 */,
-/* 185 */,
+/* 185 */
+/*!**************************************************************************************************************************!*\
+  !*** C:/Users/xch752/Documents/HBuilderProjects/weibo-uniapp/main.js?{"page":"pages%2FContent%2FMicroBlog%2FMicroBlog"} ***!
+  \**************************************************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+/* WEBPACK VAR INJECTION */(function(createPage) {__webpack_require__(/*! uni-pages */ 4);
+
+var _vue = _interopRequireDefault(__webpack_require__(/*! vue */ 2));
+var _MicroBlog = _interopRequireDefault(__webpack_require__(/*! ./pages/Content/MicroBlog/MicroBlog.vue */ 186));function _interopRequireDefault(obj) {return obj && obj.__esModule ? obj : { default: obj };}
+createPage(_MicroBlog.default);
+/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./node_modules/@dcloudio/uni-mp-weixin/dist/index.js */ 1)["createPage"]))
+
+/***/ }),
 /* 186 */,
 /* 187 */,
 /* 188 */,
 /* 189 */,
 /* 190 */,
-/* 191 */,
+/* 191 */
+/*!**********************************************************************************************************************!*\
+  !*** C:/Users/xch752/Documents/HBuilderProjects/weibo-uniapp/main.js?{"page":"pages%2FContent%2FComment%2FComment"} ***!
+  \**********************************************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+/* WEBPACK VAR INJECTION */(function(createPage) {__webpack_require__(/*! uni-pages */ 4);
+
+var _vue = _interopRequireDefault(__webpack_require__(/*! vue */ 2));
+var _Comment = _interopRequireDefault(__webpack_require__(/*! ./pages/Content/Comment/Comment.vue */ 192));function _interopRequireDefault(obj) {return obj && obj.__esModule ? obj : { default: obj };}
+createPage(_Comment.default);
+/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./node_modules/@dcloudio/uni-mp-weixin/dist/index.js */ 1)["createPage"]))
+
+/***/ }),
 /* 192 */,
 /* 193 */,
 /* 194 */,
@@ -19712,7 +19742,19 @@ createPage(_ModifyBlog.default);
 /* 208 */,
 /* 209 */,
 /* 210 */,
-/* 211 */
+/* 211 */,
+/* 212 */,
+/* 213 */,
+/* 214 */,
+/* 215 */,
+/* 216 */,
+/* 217 */,
+/* 218 */,
+/* 219 */,
+/* 220 */,
+/* 221 */,
+/* 222 */,
+/* 223 */
 /*!*********************************************************************************************!*\
   !*** C:/Users/xch752/Documents/HBuilderProjects/weibo-uniapp/components/uni-icons/icons.js ***!
   \*********************************************************************************************/
@@ -19817,18 +19859,6 @@ Object.defineProperty(exports, "__esModule", { value: true });exports.default = 
   'scan': "\uE612" };exports.default = _default;
 
 /***/ }),
-/* 212 */,
-/* 213 */,
-/* 214 */,
-/* 215 */,
-/* 216 */,
-/* 217 */,
-/* 218 */,
-/* 219 */,
-/* 220 */,
-/* 221 */,
-/* 222 */,
-/* 223 */,
 /* 224 */,
 /* 225 */,
 /* 226 */,
@@ -19841,10 +19871,14 @@ Object.defineProperty(exports, "__esModule", { value: true });exports.default = 
 /* 233 */,
 /* 234 */,
 /* 235 */,
-/* 236 */
-/*!**************************************************************************************************************************!*\
-  !*** C:/Users/xch752/Documents/HBuilderProjects/weibo-uniapp/main.js?{"page":"pages%2FContent%2FMicroBlog%2FMicroBlog"} ***!
-  \**************************************************************************************************************************/
+/* 236 */,
+/* 237 */,
+/* 238 */,
+/* 239 */,
+/* 240 */
+/*!****************************************************************************************************************!*\
+  !*** C:/Users/xch752/Documents/HBuilderProjects/weibo-uniapp/main.js?{"page":"pages%2FContent%2FLike%2FLike"} ***!
+  \****************************************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -19852,8 +19886,8 @@ Object.defineProperty(exports, "__esModule", { value: true });exports.default = 
 /* WEBPACK VAR INJECTION */(function(createPage) {__webpack_require__(/*! uni-pages */ 4);
 
 var _vue = _interopRequireDefault(__webpack_require__(/*! vue */ 2));
-var _MicroBlog = _interopRequireDefault(__webpack_require__(/*! ./pages/Content/MicroBlog/MicroBlog.vue */ 237));function _interopRequireDefault(obj) {return obj && obj.__esModule ? obj : { default: obj };}
-createPage(_MicroBlog.default);
+var _Like = _interopRequireDefault(__webpack_require__(/*! ./pages/Content/Like/Like.vue */ 241));function _interopRequireDefault(obj) {return obj && obj.__esModule ? obj : { default: obj };}
+createPage(_Like.default);
 /* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./node_modules/@dcloudio/uni-mp-weixin/dist/index.js */ 1)["createPage"]))
 
 /***/ })

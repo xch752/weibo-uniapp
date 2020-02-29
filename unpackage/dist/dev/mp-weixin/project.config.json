@@ -40,6 +40,18 @@
           "name": "MicroBlog",
           "id": 2,
           "pathName": "pages/Content/MicroBlog/MicroBlog"
+        },
+        {
+          "name": "Comment",
+          "query": "microBlogId=12da62f938",
+          "id": 3,
+          "pathName": "pages/Content/Comment/Comment"
+        },
+        {
+          "name": "Like",
+          "query": "microBlogId=12da62f938",
+          "id": 4,
+          "pathName": "pages/Content/Like/Like"
         }
       ]
     }

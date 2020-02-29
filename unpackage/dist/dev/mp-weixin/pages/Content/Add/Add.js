@@ -247,7 +247,7 @@ var _qiniuUploader = _interopRequireDefault(__webpack_require__(/*! ../../../uti
 //
 //
 //
-var uniNavBar = function uniNavBar() {return __webpack_require__.e(/*! import() | components/uni-nav-bar/uni-nav-bar */ "components/uni-nav-bar/uni-nav-bar").then(__webpack_require__.bind(null, /*! @/components/uni-nav-bar/uni-nav-bar.vue */ 192));};var hFormAlert = function hFormAlert() {return __webpack_require__.e(/*! import() | components/h-form-alert/h-form-alert */ "components/h-form-alert/h-form-alert").then(__webpack_require__.bind(null, /*! @/components/h-form-alert/h-form-alert.vue */ 228));};var _default = { components: { uniNavBar: uniNavBar, hFormAlert: hFormAlert }, data: function data() {return { // 用户ID
+var uniNavBar = function uniNavBar() {return __webpack_require__.e(/*! import() | components/uni-nav-bar/uni-nav-bar */ "components/uni-nav-bar/uni-nav-bar").then(__webpack_require__.bind(null, /*! @/components/uni-nav-bar/uni-nav-bar.vue */ 197));};var hFormAlert = function hFormAlert() {return __webpack_require__.e(/*! import() | components/h-form-alert/h-form-alert */ "components/h-form-alert/h-form-alert").then(__webpack_require__.bind(null, /*! @/components/h-form-alert/h-form-alert.vue */ 204));};var _default = { components: { uniNavBar: uniNavBar, hFormAlert: hFormAlert }, data: function data() {return { // 用户ID
       objectId: '', // 七牛token
       token: '', // 内容
       bodyValue: '', //body
@@ -349,17 +349,14 @@ var uniNavBar = function uniNavBar() {return __webpack_require__.e(/*! import() 
               uptoken: THAT.token // 由其他程序生成七牛 uptoken
             }, function (res) {
               // console.log(res);
-              // if(res.progress!==100){
-              // 	uni.showToast({
-              // 		title:`上传中，已上传${res.progress}`,
-              // 		icon:'loading'
-              // 	})
-              // }else if(res.progress===100){
-              // 	uni.showToast({
-              // 		title:`上传完成`,
-              // 		icon:'success'
-              // 	})
-              // }
+              if (res.progress !== 100) {
+                uni.showLoading({
+                  title: "\u4E0A\u4F20\u4E2D\uFF0C\u5DF2\u4E0A\u4F20".concat(res.progress),
+                  icon: 'loading' });
+
+              } else if (res.progress === 100) {
+                uni.hideLoading();
+              }
               // console.log('上传进度', res.progress)
               // console.log('已经上传的数据长度', res.totalBytesSent)
               // console.log('预期需要上传的数据总长度', res.totalBytesExpectedToSend)

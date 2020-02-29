@@ -11,7 +11,9 @@
     "pages/Content/Mine/MyMicroBlog/MyMicroBlog",
     "pages/Content/Email/Email",
     "pages/Content/Mine/MyMicroBlog/ModifyBlog/ModifyBlog",
-    "pages/Content/MicroBlog/MicroBlog"
+    "pages/Content/MicroBlog/MicroBlog",
+    "pages/Content/Comment/Comment",
+    "pages/Content/Like/Like"
   ],
   "subPackages": [],
   "window": {

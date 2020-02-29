@@ -68,7 +68,7 @@
 	import {genUpToken} from '../../../util/qiniuToken.js'
 	import qiniuUploader from '../../../util/qiniuUploader.js'
 	import uniNavBar from "@/components/uni-nav-bar/uni-nav-bar.vue" 
-	import hFormAlert from '@/components/h-form-alert/h-form-alert.vue';
+	import hFormAlert from '@/components/h-form-alert/h-form-alert.vue'
 	export default{
 		components: {uniNavBar,hFormAlert},
 		data(){
@@ -233,17 +233,14 @@
 							  uptoken: THAT.token, // 由其他程序生成七牛 uptoken
 							}, (res) => {
 								// console.log(res);
-								// if(res.progress!==100){
-								// 	uni.showToast({
-								// 		title:`上传中，已上传${res.progress}`,
-								// 		icon:'loading'
-								// 	})
-								// }else if(res.progress===100){
-								// 	uni.showToast({
-								// 		title:`上传完成`,
-								// 		icon:'success'
-								// 	})
-								// }
+								if(res.progress!==100){
+									uni.showLoading({
+										title:`上传中，已上传${res.progress}`,
+										icon:'loading'
+									})
+								}else if(res.progress===100){
+									uni.hideLoading()
+								}
 								// console.log('上传进度', res.progress)
 								// console.log('已经上传的数据长度', res.totalBytesSent)
 								// console.log('预期需要上传的数据总长度', res.totalBytesExpectedToSend)
