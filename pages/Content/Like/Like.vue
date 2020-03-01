@@ -141,6 +141,9 @@
 			currentChange(){
 				const query = this.Bmob.Query("MicroBlog")
 				query.equalTo("objectId","==", this.microBlogId)
+				uni.showLoading({
+					title: '加载中'
+				})
 				query.find().then(res_blog => {
 					this.microBlogCreaotrId = res_blog[0].creator.objectId
 					let queryLike = this.Bmob.Query('MicroBlog')
@@ -225,6 +228,10 @@
 	}
 </script>
 
-<style>
-
+<style scoped>
+	.cu-list.menu-avatar>.cu-item .action {
+		width: 200upx;
+		text-align: center;
+	}
+	
 </style>

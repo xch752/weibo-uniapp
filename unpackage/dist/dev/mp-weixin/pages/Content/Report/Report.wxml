@@ -1,0 +1,1 @@
+<view><uni-nav-bar vue-id="1" left-icon="back" status-bar="{{true}}" shadow="true" fixed="true" title="举报" data-event-opts="{{[['^clickLeft',[['navBack']]]]}}" bind:clickLeft="__e" bind:__l="__l"></uni-nav-bar></view>

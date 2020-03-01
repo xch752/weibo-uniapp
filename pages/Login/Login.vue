@@ -24,7 +24,7 @@
 				<input placeholder="请输入手机号" name="input" v-model="logUserName" maxlength="11"></input>
 			</view>
 			<view class="cu-form-group solid-bottom round" style="margin: 30upx 0 30upx 0;">
-				<view class="title text-mauve cuIcon-attention text-xl"></view>
+				<view class="title text-mauve cuIcon-lock text-xl"></view>
 				<input placeholder="请输入密码" password="true" name="input" v-model="logPassword"></input>
 			</view>
 			<button class="cu-btn round bg-mauve lg padding-xl margin-top-xl" style="width: 560upx;padding: 20upx 0 20upx 0;" @click="toHome">登录</button>

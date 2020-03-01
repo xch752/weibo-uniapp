@@ -50,30 +50,6 @@
             }
         }
         ,{
-            "path" : "pages/Content/Mine/ModifyNickname/ModifyNickname",
-            "style": {
-            	"navigationBarTitleText": "修改昵称"
-            }
-        }
-        ,{
-            "path" : "pages/Content/Mine/MyMicroBlog/MyMicroBlog",
-            "style" : {
-				"navigationBarTitleText": "我的微博"
-			}
-        }
-        ,{
-            "path" : "pages/Content/Email/Email",
-            "style" : {
-				"navigationBarTitleText": "邮箱绑定"
-			}
-        }
-        ,{
-            "path" : "pages/Content/Mine/MyMicroBlog/ModifyBlog/ModifyBlog",
-            "style" : {
-				"navigationBarTitleText": "编辑微博"
-			}
-        }
-        ,{
             "path" : "pages/Content/MicroBlog/MicroBlog",
             "style" : {}
         }
@@ -88,6 +64,27 @@
             "path" : "pages/Content/Like/Like",
             "style" : {
 				"navigationBarTitleText": "点赞",
+            	"navigationStyle": "custom"
+			}
+        }
+        ,{
+            "path" : "pages/Content/Report/Report",
+            "style" : {
+				"navigationBarTitleText": "举报",
+            	"navigationStyle": "custom"
+			}
+        }
+        ,{
+            "path" : "pages/Content/Mine/ModifyUserInfo/ModifyUserInfo",
+            "style" : {
+				"navigationBarTitleText": "编辑资料",
+            	"navigationStyle": "custom"
+			}
+        }
+        ,{
+            "path" : "pages/Content/Fans/Fans",
+            "style" : {
+				"navigationBarTitleText": "粉丝",
             	"navigationStyle": "custom"
 			}
         }
@@ -149,6 +146,16 @@
 				"name": "Like",
 				"path": "pages/Content/Like/Like",
 				"query": "microBlogId=12da62f938"
+			},
+			{
+				"name": "ModifyUserInfo",
+				"path": "pages/Content/Mine/ModifyUserInfo/ModifyUserInfo",
+				"query": "objectId=ecf5432115"
+			},
+			{
+				"name": "Fans",
+				"path": "pages/Content/Fans/Fans",
+				"query": "objectId=ecf5432115"
 			}
 		]
 	}

@@ -171,7 +171,9 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
-var _hydrogenJsSdk = _interopRequireDefault(__webpack_require__(/*! hydrogen-js-sdk */ 11));function _interopRequireDefault(obj) {return obj && obj.__esModule ? obj : { default: obj };}var uniNavBar = function uniNavBar() {return __webpack_require__.e(/*! import() | components/uni-nav-bar/uni-nav-bar */ "components/uni-nav-bar/uni-nav-bar").then(__webpack_require__.bind(null, /*! @/components/uni-nav-bar/uni-nav-bar.vue */ 197));};var hFormAlert = function hFormAlert() {return __webpack_require__.e(/*! import() | components/h-form-alert/h-form-alert */ "components/h-form-alert/h-form-alert").then(__webpack_require__.bind(null, /*! @/components/h-form-alert/h-form-alert.vue */ 204));};var _default =
+
+
+var _hydrogenJsSdk = _interopRequireDefault(__webpack_require__(/*! hydrogen-js-sdk */ 11));function _interopRequireDefault(obj) {return obj && obj.__esModule ? obj : { default: obj };}var uniNavBar = function uniNavBar() {return __webpack_require__.e(/*! import() | components/uni-nav-bar/uni-nav-bar */ "components/uni-nav-bar/uni-nav-bar").then(__webpack_require__.bind(null, /*! @/components/uni-nav-bar/uni-nav-bar.vue */ 195));};var hFormAlert = function hFormAlert() {return __webpack_require__.e(/*! import() | components/h-form-alert/h-form-alert */ "components/h-form-alert/h-form-alert").then(__webpack_require__.bind(null, /*! @/components/h-form-alert/h-form-alert.vue */ 202));};var _default =
 
 {
   components: { uniNavBar: uniNavBar, hFormAlert: hFormAlert },
@@ -254,6 +256,11 @@ var _hydrogenJsSdk = _interopRequireDefault(__webpack_require__(/*! hydrogen-js-
         url: "../Like/Like?microBlogId=".concat(objectId) });
 
     },
+    toReport: function toReport(objectId) {
+      uni.navigateTo({
+        url: "../Report/Report?microBlogId=".concat(objectId) });
+
+    },
     // 大图预览 + 保存到相册
     previewImg: function previewImg(list, index) {
       uni.previewImage({
@@ -274,6 +281,7 @@ var _hydrogenJsSdk = _interopRequireDefault(__webpack_require__(/*! hydrogen-js-
     initBlogList: function initBlogList() {var _this2 = this;
       var countNumberLike = 0;
       var countNumberComment = 0;
+      var countNumberCollect = 0;
       // 查表MicroBlog
       var query = _hydrogenJsSdk.default.Query('MicroBlog');
       // 查询详细creator
@@ -289,6 +297,7 @@ var _hydrogenJsSdk = _interopRequireDefault(__webpack_require__(/*! hydrogen-js-
         // 数据处理
         res_blog.map(function (item_blog, index_blog) {
           item_blog.isLike = false;
+          item_blog.isCollect = false;
           item_blog.createdAt = _this2.getDateDiff(item_blog.createdAt);
           // 分割imgList
           if (item_blog.imgList) {
@@ -312,7 +321,7 @@ var _hydrogenJsSdk = _interopRequireDefault(__webpack_require__(/*! hydrogen-js-
               }
             }
             countNumberLike = countNumberLike + 1;
-            if (countNumberLike == res_blog.length && countNumberComment == res_blog.length) {
+            if (countNumberLike == res_blog.length && countNumberComment == res_blog.length && countNumberCollect == res_blog.length) {
               _this2.blogList = res_blog;
               uni.hideLoading();
               console.log('this.blogList', _this2.blogList);
@@ -325,7 +334,28 @@ var _hydrogenJsSdk = _interopRequireDefault(__webpack_require__(/*! hydrogen-js-
           queryComment.relation('Comment').then(function (res_comment) {
             item_blog.comments = res_comment;
             countNumberComment = countNumberComment + 1;
-            if (countNumberLike == res_blog.length && countNumberComment == res_blog.length) {
+            if (countNumberLike == res_blog.length && countNumberComment == res_blog.length && countNumberCollect == res_blog.length) {
+
+              _this2.blogList = res_blog;
+              uni.hideLoading();
+              console.log('this.blogList', _this2.blogList);
+            }
+          });
+          // 查询收藏的关联关系
+          var queryCollect = _hydrogenJsSdk.default.Query('MicroBlog');
+          queryCollect.field('collects', item_blog.objectId);
+          // 查询收藏的具体的用户信息
+          queryCollect.relation('Collect').then(function (res_collect) {
+            item_blog.collects = res_collect;
+            // 查询是否收藏这条帖子 方法一
+            for (var i = 0; i < res_collect.results.length; i++) {
+              if (res_collect.results[i].creator.objectId == _this2.objectId) {
+                item_blog.isCollect = true;
+                break;
+              }
+            }
+            countNumberCollect = countNumberCollect + 1;
+            if (countNumberLike == res_blog.length && countNumberComment == res_blog.length && countNumberCollect == res_blog.length) {
               _this2.blogList = res_blog;
               uni.hideLoading();
               console.log('this.blogList', _this2.blogList);
@@ -340,6 +370,7 @@ var _hydrogenJsSdk = _interopRequireDefault(__webpack_require__(/*! hydrogen-js-
     currentChange: function currentChange(e) {var _this3 = this;
       var countNumberLike = 0;
       var countNumberComment = 0;
+      var countNumberCollect = 0;
       // 查表MicroBlog
       var query = _hydrogenJsSdk.default.Query('MicroBlog');
       // 查询详细creator
@@ -365,6 +396,7 @@ var _hydrogenJsSdk = _interopRequireDefault(__webpack_require__(/*! hydrogen-js-
           // 数据处理
           res_blog.map(function (item_blog, index_blog) {
             item_blog.isLike = false;
+            item_blog.isCollect = false;
             item_blog.createdAt = _this3.getDateDiff(item_blog.createdAt);
             // 分割imgList
             if (item_blog.imgList) {
@@ -389,7 +421,7 @@ var _hydrogenJsSdk = _interopRequireDefault(__webpack_require__(/*! hydrogen-js-
               }
               // console.log('index',index_blog,'countNumber',countNumberLike,'result',res_like)
               countNumberLike = countNumberLike + 1;
-              if (countNumberLike == res_blog.length && countNumberComment == res_blog.length) {
+              if (countNumberLike == res_blog.length && countNumberComment == res_blog.length && countNumberCollect == res_blog.length) {
                 _this3.blogList = _this3.blogList.concat(res_blog);
                 uni.hideLoading();
                 console.log('this.blogList', _this3.blogList);
@@ -402,8 +434,28 @@ var _hydrogenJsSdk = _interopRequireDefault(__webpack_require__(/*! hydrogen-js-
             queryComment.relation('Comment').then(function (res_comment) {
               item_blog.comments = res_comment;
               countNumberComment = countNumberComment + 1;
-              if (countNumberLike == res_blog.length && countNumberComment == res_blog.length) {
+              if (countNumberLike == res_blog.length && countNumberComment == res_blog.length && countNumberCollect == res_blog.length) {
                 _this3.blogList = _this3.blogList.concat(res_blog);
+                uni.hideLoading();
+                console.log('this.blogList', _this3.blogList);
+              }
+            });
+            // 查询收藏的关联关系
+            var queryCollect = _hydrogenJsSdk.default.Query('MicroBlog');
+            queryCollect.field('collects', item_blog.objectId);
+            // 查询收藏的具体的用户信息
+            queryCollect.relation('Collect').then(function (res_collect) {
+              item_blog.collects = res_collect;
+              // 查询是否收藏这条帖子 方法一
+              for (var i = 0; i < res_collect.results.length; i++) {
+                if (res_collect.results[i].creator.objectId == _this3.objectId) {
+                  item_blog.isCollect = true;
+                  break;
+                }
+              }
+              countNumberCollect = countNumberCollect + 1;
+              if (countNumberLike == res_blog.length && countNumberComment == res_blog.length && countNumberCollect == res_blog.length) {
+                _this3.blogList = res_blog;
                 uni.hideLoading();
                 console.log('this.blogList', _this3.blogList);
               }
@@ -484,14 +536,153 @@ var _hydrogenJsSdk = _interopRequireDefault(__webpack_require__(/*! hydrogen-js-
         });
       });
     },
-    // 更多弹窗
-    moreActionSheetTap: function moreActionSheetTap() {
-      uni.showActionSheet({
-        itemList: ['关注', '收藏', '举报'],
-        success: function success(e) {
-          console.log(e.tapIndex);
-        } });
+    // 收藏
+    collect: function collect(itemid, index, creatorid) {var _this6 = this;
+      // 关联收藏者
+      var pointer = _hydrogenJsSdk.default.Pointer('_User');
+      var poiID = pointer.set(this.objectId);
+      // 关联被收藏帖子
+      var pointer_blog = _hydrogenJsSdk.default.Pointer('MicroBlog');
+      var poiID_blog = pointer.set(itemid);
+      // 关联被收藏者
+      var pointer_creator = _hydrogenJsSdk.default.Pointer('_User');
+      var poiID_creator = pointer.set(creatorid);
+      // 写入数据库Collect表 写入收藏记录
+      var query = _hydrogenJsSdk.default.Query('Collect');
+      query.set('creator', poiID);
+      query.set('collected_blog', poiID_blog);
+      query.set('collected_creator', poiID_creator);
+      query.save().then(function (res) {
+        console.log(res);
+        var relation = _hydrogenJsSdk.default.Relation('Collect'); // 需要关联的表
+        var relID = relation.add([res.objectId]); //关联表中需要关联的objectId, 返回一个Relation对象, add方法接受string和array的类型参数
+        var query1 = _hydrogenJsSdk.default.Query('MicroBlog');
+        query1.get(itemid).then(function (result) {
+          result.set('collects', relID); // 将Relation对象保存到likes字段中，即实现了一对多的关联
+          result.save();
+          console.log(result);
+          _this6.blogList[index].isCollect = true;
+          uni.showToast({
+            title: '收藏成功',
+            duration: 2000 });
 
+        });
+      }).catch(function (err) {
+        console.log(err);
+        uni.showToast({
+          title: err.error,
+          icon: 'none',
+          complete: function complete() {
+            setTimeout(function () {
+              uni.hideToast();
+            }, 2000);
+          } });
+
+      });
+    },
+    // 取消点赞
+    unCollect: function unCollect(itemid, index) {var _this7 = this;
+      // 查询符合条件的点赞表的记录
+      var query = _hydrogenJsSdk.default.Query('Collect');
+      query.equalTo("creator", '===', this.objectId);
+      query.equalTo("collected_blog", '===', itemid);
+      query.find().then(function (res) {
+        console.log(res);
+        var query = _hydrogenJsSdk.default.Query('Collect');
+        query.destroy(res[0].objectId).then(function (result) {
+          console.log(result);
+          _this7.blogList[index].isCollect = false;
+          uni.showToast({
+            title: '取消收藏',
+            duration: 2000 });
+
+        }).catch(function (err) {
+          console.log(err);
+          uni.showToast({
+            title: '取消收藏失败',
+            duration: 2000,
+            icon: 'none' });
+
+        });
+      });
+    },
+    // 更多弹窗
+    moreActionSheetTap: function moreActionSheetTap(item) {var _this8 = this;
+      var query = _hydrogenJsSdk.default.Query('Attention');
+      query.equalTo("bloger", '===', item.creator.objectId);
+      query.equalTo("fans", '===', this.objectId);
+      query.find().then(function (res) {
+        // 已关注
+        if (res.length != 0) {
+          uni.showActionSheet({
+            itemList: ['取消关注', '举报'],
+            success: function success(e) {
+              switch (e.tapIndex) {
+                case 0:
+                  query.destroy(res[0].objectId).then(function (result) {
+                    console.log(result);
+                    uni.showToast({
+                      title: '取消关注成功',
+                      duration: 2000 });
+
+                  }).catch(function (err) {
+                    console.log(err);
+                    uni.showToast({
+                      title: '取消关注失败',
+                      duration: 2000,
+                      icon: 'none' });
+
+                  });
+                  break;
+                case 1:
+                  _this8.toReport(item.objectId);
+                  break;
+                default:
+                  break;}
+
+            } });
+
+        }
+        // 未关注
+        else {
+            uni.showActionSheet({
+              itemList: ['关注', '举报'],
+              success: function success(e) {
+                switch (e.tapIndex) {
+                  case 0:
+                    // 关联自己
+                    var pointer = _hydrogenJsSdk.default.Pointer('_User');
+                    var poiID = pointer.set(_this8.objectId);
+                    // 关联被博主
+                    var pointer_bloger = _hydrogenJsSdk.default.Pointer('_User');
+                    var poiID_bloger = pointer.set(item.creator.objectId);
+                    // 写入数据库Attention表 写入收藏记录
+                    var _query = _hydrogenJsSdk.default.Query('Attention');
+                    _query.set('fans', poiID);
+                    _query.set('bloger', poiID_bloger);
+                    _query.save().then(function (res) {
+                      uni.showToast({
+                        title: '关注成功',
+                        duration: 2000 });
+
+                    }).catch(function (err) {
+                      uni.showToast({
+                        title: '关注失败',
+                        duration: 200,
+                        icon: 'none' });
+
+                    });
+                    break;
+                  case 1:
+                    _this8.toReport(item.objectId);
+                    break;
+                  default:
+                    break;}
+
+              } });
+
+          }
+      });
     },
     // 位置
     openLocation: function openLocation(Geolocation) {

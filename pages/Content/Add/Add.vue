@@ -26,16 +26,16 @@
 			<text 
 				v-for="(item,index) in tag" :key="index" 
 				@click="deleteTag(index)"
-				class="bg-blue light round text-bold" style="padding: 5upx 30upx;margin:10upx 30upx 0 0">{{item}}</text>
+				class="bg-gray light round text-bold" style="padding: 5upx 30upx;margin:10upx 30upx 0 0">{{item}}</text>
 			<text
 				v-if="tag.length < 5 ? true : false"
 				@click="tagAddShow = true"
-			  	class="bg-blue light round text-bold cuIcon-roundadd" style="line-height:50upx;padding: 5upx 30upx;margin:10upx 30upx 0 0"></text>
+			  	class="bg-gray light round text-bold cuIcon-roundadd" style="line-height:50upx;padding: 5upx 30upx;margin:10upx 30upx 0 0"></text>
 		</view>	
 		<hFormAlert v-if="tagAddShow" maxlength="7" name="tagName" placeholder="请输入标签" @confirm="addTag" @cancel="tagAddShow = false"></hFormAlert>
 		<!-- 分区 -->
 		<view class="flex justify-start padding-xl" style="padding-top: 10upx;padding-bottom:10upx;">
-			<text class="cuIcon-discover" style="margin-right:30upx;line-heght:28upx;font-size:50upx"></text>
+			<text class="cuIcon-discover" style="margin-right:30upx;line-height:28upx;font-size:50upx"></text>
 			<picker @change="bindPickerChange" :value="index" :range="partArray" range-key="partName">
 				<view class="uni-input text-bold">{{partArray[index].partName}}</view>
 			</picker>

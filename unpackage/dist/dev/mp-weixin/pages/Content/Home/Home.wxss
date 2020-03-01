@@ -5,6 +5,10 @@
 .cu-list.menu-avatar>.cu-item.data-v-c02f36bc:after, .cu-list.menu>.cu-item.data-v-c02f36bc:after {	
 	border-bottom: 0;
 }
+.cu-list.menu-avatar>.cu-item .content.data-v-c02f36bc {
+	left: 126rpx;
+	top: 20rpx;
+}
 .solid-bottom.data-v-c02f36bc::after {
 	border-bottom: 0;
 }

@@ -1,46 +1,297 @@
 
-.full.data-v-7ae7ad22{
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/* .full{
 	position: fixed;
 	height: 100%;
 	width: 100%;
-	display: -webkit-box;
-	display: -webkit-flex;
-	display: -ms-flexbox;
 	display: flex;
-	-webkit-box-orient: vertical;
-	-webkit-box-direction: normal;
-	-webkit-flex-direction: column;
-	    -ms-flex-direction: column;
-	        flex-direction: column;
-	background-color: #FFFFFF;
-}
+	flex-direction: column;
+	background-color: #FFFFFF; 
+} */
 .suggestion.data-v-7ae7ad22{
 	margin-left: 50rpx;
 	letter-spacing:2rpx;
 }
 .header.data-v-7ae7ad22{
-	height: 395rpx;
-	background: #6A2BF8;
+	height: 250rpx;
+	background-image: url('http://static.xch752.com/mine_background.jpg');
+	background-size: cover;
+	background-position: center;
 }
 .avatar.data-v-7ae7ad22{
-	width: 162rpx;
-	height: 162rpx;
+	position: absolute;
+	top:175rpx;
+	left:75rpx;
+	width: 150rpx;
+	height: 150rpx;
 	border-radius: 50%;
-	border:4rpx solid #FFFFFF;
+	border:2rpx solid #FFFFFF;
+	background-size: cover;
+	background-position: center; -webkit-box-shadow:1px 1px 3px #888888; box-shadow:1px 1px 3px #888888;
 }
-.vipStatus.data-v-7ae7ad22{
-	width:30rpx;
-	height: 30rpx;
+.info.data-v-7ae7ad22{
+	padding: 80rpx 0 0 75rpx;
 }
-.cerStatus.data-v-7ae7ad22{
-	width:30rpx;
-	height: 30rpx;
+.normal.data-v-7ae7ad22{
+	font-weight:normal
 }
 .item.data-v-7ae7ad22{
 	padding-top: 40rpx;
 	padding-right: 50rpx;
 	padding-left: 50rpx;
-	height: 9%;/*百分比占高,为了适配Pad,若不适配Pad,可以使用单位upx,更加美观*/
+	height: 100rpx;/*百分比占高,为了适配Pad,若不适配Pad,可以使用单位upx,更加美观*/
 	width: 100%;
 }
 

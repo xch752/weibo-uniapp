@@ -52,6 +52,18 @@
           "query": "microBlogId=12da62f938",
           "id": 4,
           "pathName": "pages/Content/Like/Like"
+        },
+        {
+          "name": "ModifyUserInfo",
+          "query": "objectId=ecf5432115",
+          "id": 5,
+          "pathName": "pages/Content/Mine/ModifyUserInfo/ModifyUserInfo"
+        },
+        {
+          "name": "Fans",
+          "query": "objectId=ecf5432115",
+          "id": 6,
+          "pathName": "pages/Content/Fans/Fans"
         }
       ]
     }

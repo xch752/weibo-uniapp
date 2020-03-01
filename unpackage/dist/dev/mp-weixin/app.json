@@ -7,13 +7,12 @@
     "pages/Content/Message/Message",
     "pages/Content/Mine/Mine",
     "pages/Content/Add/Add",
-    "pages/Content/Mine/ModifyNickname/ModifyNickname",
-    "pages/Content/Mine/MyMicroBlog/MyMicroBlog",
-    "pages/Content/Email/Email",
-    "pages/Content/Mine/MyMicroBlog/ModifyBlog/ModifyBlog",
     "pages/Content/MicroBlog/MicroBlog",
     "pages/Content/Comment/Comment",
-    "pages/Content/Like/Like"
+    "pages/Content/Like/Like",
+    "pages/Content/Report/Report",
+    "pages/Content/Mine/ModifyUserInfo/ModifyUserInfo",
+    "pages/Content/Fans/Fans"
   ],
   "subPackages": [],
   "window": {

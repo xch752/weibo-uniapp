@@ -28,7 +28,7 @@
 		</view>
 		<!-- 输入框 -->
 		<view class="cu-bar foot input" :style="[{'bottom':InputBottom+'px'}]">
-			<input class="solid-bottom round" style="boder:1upx solid #000000" :adjust-position="false" :focus="inputFocus" maxlength="300" cursor-spacing="10"
+			<input class="solid-bottom round" style="border:1upx solid #000000" :adjust-position="false" :focus="inputFocus" maxlength="300" cursor-spacing="10"
 			 :placeholder="placeholderValue" @focus="InputFocus" @blur="InputBlur" v-model="bodyValue" confirm-type="send" @confirm="postComment" :confirm-hold='true'></input>
 			<!-- <view class="action">
 				<image src="https://static.mianyangjuan.com//Emoticon@3x.png" mode="aspectFit" style="width: 60upx;height: 60upx;margin: 30upx 0 30upx 15upx;"></image>

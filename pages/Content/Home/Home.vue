@@ -11,7 +11,7 @@
 							<view class="content flex-sub">
 								<view class="flex justify-between">
 									<text class="text-df text-bold">{{item.creator.nickname}}</text>
-									<image style="width:48upx;height:48upx" src="../../../static/img/more.png" mode="aspectFill" @click.stop="moreActionSheetTap"></image>
+									<image v-if="item.creator.objectId!=objectId" style="width:48upx;height:48upx" src="../../../static/img/more.png" mode="aspectFill" @click.stop="moreActionSheetTap(item)"></image>
 								</view>
 								<view class="text-gray text-sm flex justify-between">
 									<text class="text-sm">{{item.createdAt}}</text>
@@ -34,16 +34,18 @@
 					<view class="flex solid-bottom padding justify-between" style="padding-top: 0;padding-bottom:0upx;">
 						<view class="radius">
 							<image v-if="!item.isLike" class="card-btn" src="../../../static/img/like.png" mode="aspectFill" @click.stop="like(item.objectId,index,item.creator.objectId)"></image>
-							<image v-if="item.isLike" class="card-btn" src="../../../static/img/islike.png" mode="aspectFill" @click.stop="unlike(item.objectId,index)"></image>
+							<image v-else class="card-btn" src="../../../static/img/islike.png" mode="aspectFill" @click.stop="unlike(item.objectId,index)"></image>
 							<image class="card-btn" src="../../../static/img/comment.png" style="margin-left:20upx" mode="aspectFill" @click.stop="toComment(item.objectId)"></image>
+							<image class="card-btn" src="../../../static/img/share.png" style="margin-left:20upx" mode="aspectFill"></image>
 						</view>
 						<view class="radius">
-							<image class="card-btn" src="../../../static/img/share.png" mode="aspectFill"></image>
+							<image v-if="!item.isCollect" class="card-btn" src="../../../static/img/collect.png" mode="aspectFill" @click.stop="collect(item.objectId,index,item.creator.objectId)"></image>
+							<image v-else class="card-btn" src="../../../static/img/iscollect.png" mode="aspectFill" @click.stop="unCollect(item.objectId,index)"></image>
 						</view>
 					</view>
 					<!-- 标签部分 -->
 					<view v-if="item.tag" class="flex justify-start padding" style="flex-flow:row wrap;padding-top: 0;padding-bottom:0upx;">
-						<text v-for="(tagItem,tagIndex) in item.tag" :key="tagIndex" class="bg-blue light round text-bold text-sm" style="padding: 5upx 30upx;margin-right:30upx">{{tagItem}}</text>
+						<text v-for="(tagItem,tagIndex) in item.tag" :key="tagIndex" class="bg-gray light round text-bold text-sm" style="padding: 5upx 30upx;margin-right:30upx">{{tagItem}}</text>
 					</view>	
 					<!-- 统计部分 -->
 					<view class="flex solid-bottom padding-xl justify-between align-center" style="padding-top: 0;padding-bottom:0upx;">
@@ -51,7 +53,7 @@
 							<view style="line-height:70upx;margin-right:50upx" @click.stop="toLike(item.objectId)">{{item.likes.count}}点赞</view>
 							<view style="line-height:70upx" class="text-gray" @click.stop="toComment(item.objectId)">{{item.comments.count}}评论</view>
 						</view>
-						<view v-if="item.Geolocation" class="radius flex justify-center align-center" @click.stop="openLocation(item.Geolocation)">
+						<view v-if="item.Geolocation.name" class="radius flex justify-center align-center" @click.stop="openLocation(item.Geolocation)">
 							<image class="card-btn" style="width:60upx;height:60upx" src="../../../static/img/address.png" mode="aspectFill" />
 							<text class="bg-gray round text-bold text-sm" style="padding: 5upx 30upx">{{item.Geolocation.name}}</text>
 						</view>
@@ -147,6 +149,11 @@
 					url: `../Like/Like?microBlogId=${objectId}`
 				})
 			},
+			toReport(objectId){
+				uni.navigateTo({
+					url: `../Report/Report?microBlogId=${objectId}`
+				})
+			},
 			// 大图预览 + 保存到相册
 			previewImg(list,index){
 				uni.previewImage({
@@ -167,6 +174,7 @@
 			initBlogList(){
 				var countNumberLike = 0 
 				var countNumberComment = 0 
+				var countNumberCollect = 0 
 				// 查表MicroBlog
 				var query = Bmob.Query('MicroBlog')
 				// 查询详细creator
@@ -182,6 +190,7 @@
 					// 数据处理
 					res_blog.map((item_blog,index_blog)=>{
 						item_blog.isLike = false
+						item_blog.isCollect = false
 						item_blog.createdAt = this.getDateDiff(item_blog.createdAt)
 						// 分割imgList
 						if(item_blog.imgList){
@@ -205,7 +214,7 @@
 								}
 							}
 							countNumberLike = countNumberLike + 1
-							if(countNumberLike == res_blog.length && countNumberComment == res_blog.length){
+							if(countNumberLike == res_blog.length && countNumberComment == res_blog.length && countNumberCollect == res_blog.length){
 								this.blogList=res_blog
 								uni.hideLoading()
 								console.log('this.blogList',this.blogList)
@@ -218,7 +227,28 @@
 						queryComment.relation('Comment').then(res_comment => {
 							item_blog.comments = res_comment
 							countNumberComment = countNumberComment + 1
-							if(countNumberLike == res_blog.length && countNumberComment == res_blog.length){
+							if(countNumberLike == res_blog.length && countNumberComment == res_blog.length && countNumberCollect == res_blog.length){
+
+								this.blogList=res_blog
+								uni.hideLoading()
+								console.log('this.blogList',this.blogList)
+							}
+						})
+						// 查询收藏的关联关系
+						let queryCollect = Bmob.Query('MicroBlog')
+						queryCollect.field('collects',item_blog.objectId)
+						// 查询收藏的具体的用户信息
+						queryCollect.relation('Collect').then(res_collect => {
+							item_blog.collects = res_collect
+							// 查询是否收藏这条帖子 方法一
+							for(var i = 0; i < res_collect.results.length; i++){
+								if(res_collect.results[i].creator.objectId == this.objectId){
+									item_blog.isCollect = true
+									break
+								}
+							}
+							countNumberCollect = countNumberCollect + 1
+							if(countNumberLike == res_blog.length && countNumberComment == res_blog.length && countNumberCollect == res_blog.length){
 								this.blogList=res_blog
 								uni.hideLoading()
 								console.log('this.blogList',this.blogList)
@@ -233,6 +263,7 @@
 			currentChange(e){
 				var countNumberLike = 0 
 				var countNumberComment = 0 
+				var countNumberCollect = 0 
 				// 查表MicroBlog
 				var query = Bmob.Query('MicroBlog')
 				// 查询详细creator
@@ -258,6 +289,7 @@
 						// 数据处理
 						res_blog.map((item_blog,index_blog)=>{
 							item_blog.isLike = false
+							item_blog.isCollect = false
 							item_blog.createdAt = this.getDateDiff(item_blog.createdAt)
 							// 分割imgList
 							if(item_blog.imgList){
@@ -282,7 +314,7 @@
 								}
 								// console.log('index',index_blog,'countNumber',countNumberLike,'result',res_like)
 								countNumberLike = countNumberLike + 1
-								if(countNumberLike == res_blog.length && countNumberComment == res_blog.length){
+								if(countNumberLike == res_blog.length && countNumberComment == res_blog.length && countNumberCollect == res_blog.length){
 									this.blogList=this.blogList.concat(res_blog)
 									uni.hideLoading()
 									console.log('this.blogList',this.blogList)
@@ -295,8 +327,28 @@
 							queryComment.relation('Comment').then(res_comment => {
 								item_blog.comments = res_comment
 								countNumberComment = countNumberComment + 1
-								if(countNumberLike == res_blog.length && countNumberComment == res_blog.length){
+								if(countNumberLike == res_blog.length && countNumberComment == res_blog.length && countNumberCollect == res_blog.length){
 									this.blogList=this.blogList.concat(res_blog)
+									uni.hideLoading()
+									console.log('this.blogList',this.blogList)
+								}
+							})
+							// 查询收藏的关联关系
+							let queryCollect = Bmob.Query('MicroBlog')
+							queryCollect.field('collects',item_blog.objectId)
+							// 查询收藏的具体的用户信息
+							queryCollect.relation('Collect').then(res_collect => {
+								item_blog.collects = res_collect
+								// 查询是否收藏这条帖子 方法一
+								for(var i = 0; i < res_collect.results.length; i++){
+									if(res_collect.results[i].creator.objectId == this.objectId){
+										item_blog.isCollect = true
+										break
+									}
+								}
+								countNumberCollect = countNumberCollect + 1
+								if(countNumberLike == res_blog.length && countNumberComment == res_blog.length && countNumberCollect == res_blog.length){
+									this.blogList=res_blog
 									uni.hideLoading()
 									console.log('this.blogList',this.blogList)
 								}
@@ -377,12 +429,151 @@
 					})
 				})
 			},
+			// 收藏
+			collect(itemid,index,creatorid){
+				// 关联收藏者
+				const pointer = Bmob.Pointer('_User')
+				const poiID = pointer.set(this.objectId)
+				// 关联被收藏帖子
+				const pointer_blog = Bmob.Pointer('MicroBlog')
+				const poiID_blog = pointer.set(itemid)
+				// 关联被收藏者
+				const pointer_creator = Bmob.Pointer('_User')
+				const poiID_creator = pointer.set(creatorid)
+				// 写入数据库Collect表 写入收藏记录
+				const query = Bmob.Query('Collect')
+				query.set('creator',poiID)
+				query.set('collected_blog',poiID_blog)
+				query.set('collected_creator',poiID_creator)
+				query.save().then(res => {
+					console.log(res)
+					const relation = Bmob.Relation('Collect') // 需要关联的表
+					const relID = relation.add([res.objectId]) //关联表中需要关联的objectId, 返回一个Relation对象, add方法接受string和array的类型参数
+					const query1 = Bmob.Query('MicroBlog')
+					query1.get(itemid).then(result => {
+						result.set('collects',relID) // 将Relation对象保存到likes字段中，即实现了一对多的关联
+						result.save()
+						console.log(result)
+						this.blogList[index].isCollect = true
+						uni.showToast({
+							title: '收藏成功',
+							duration: 2000
+						})
+					})
+				}).catch(err => {
+					console.log(err)
+					uni.showToast({
+						title:err.error,
+						icon:'none',
+						complete:()=>{
+							setTimeout(()=>{
+							uni.hideToast()
+							},2000)
+						}
+					})
+				})
+			},
+			// 取消点赞
+			unCollect(itemid,index){
+				// 查询符合条件的点赞表的记录
+				const query = Bmob.Query('Collect')
+				query.equalTo("creator", '===', this.objectId)
+				query.equalTo("collected_blog", '===', itemid)
+				query.find().then(res => {
+					console.log(res)
+					const query = Bmob.Query('Collect')
+					query.destroy(res[0].objectId).then(result => {
+						console.log(result)
+						this.blogList[index].isCollect = false
+						uni.showToast({
+							title: '取消收藏',
+							duration: 2000
+						})
+					}).catch(err => {
+						console.log(err)
+						uni.showToast({
+							title: '取消收藏失败',
+							duration: 2000,
+							icon:'none'
+						})
+					})
+				})
+			},
 			// 更多弹窗
-			moreActionSheetTap() {
-				uni.showActionSheet({
-					itemList: ['关注', '收藏', '举报'],
-					success: (e) => {
-						console.log(e.tapIndex);
+			moreActionSheetTap(item) {
+				const query = Bmob.Query('Attention')
+				query.equalTo("bloger", '===', item.creator.objectId)
+				query.equalTo("fans", '===', this.objectId)
+				query.find().then(res => {
+					// 已关注
+					if(res.length!=0){
+						uni.showActionSheet({
+							itemList: ['取消关注', '举报'],
+							success: (e) => {
+								switch(e.tapIndex){
+									case 0:
+										query.destroy(res[0].objectId).then(result => {
+											console.log(result)
+											uni.showToast({
+												title: '取消关注成功',
+												duration: 2000
+											})
+										}).catch(err => {
+											console.log(err)
+											uni.showToast({
+												title: '取消关注失败',
+												duration: 2000,
+												icon:'none'
+											})
+										})
+										break
+									case 1:
+										this.toReport(item.objectId)
+										break
+									default:
+										break
+								}
+							}
+						})
+					}
+					// 未关注
+					else{
+						uni.showActionSheet({
+							itemList: ['关注', '举报'],
+							success: (e) => {
+								switch(e.tapIndex){
+									case 0:
+										// 关联自己
+										const pointer = Bmob.Pointer('_User')
+										const poiID = pointer.set(this.objectId)
+										// 关联被博主
+										const pointer_bloger = Bmob.Pointer('_User')
+										const poiID_bloger = pointer.set(item.creator.objectId)
+										// 写入数据库Attention表 写入收藏记录
+										const query = Bmob.Query('Attention')
+										query.set('fans',poiID)
+										query.set('bloger',poiID_bloger)
+										query.save().then(res => {
+											uni.showToast({
+												title: '关注成功',
+												duration: 2000
+											})
+										}).catch(err =>{
+											uni.showToast({
+												title: '关注失败',
+												duration: 200,
+												icon: 'none'
+											})
+										})
+										break
+									case 1:
+										this.toReport(item.objectId)
+										break
+									default:
+										break
+								}
+							}
+						})
 					}
 				})
 			},
@@ -442,6 +633,10 @@
 	}
 	.cu-list.menu-avatar>.cu-item:after, .cu-list.menu>.cu-item:after {	
 		border-bottom: 0;
+	}
+	.cu-list.menu-avatar>.cu-item .content {
+		left: 126upx;
+		top: 20upx;
 	}
 	.solid-bottom::after {
 		border-bottom: 0;
