@@ -1,7 +1,0 @@
-{
-  "navigationBarTitleText": "粉丝",
-  "navigationStyle": "custom",
-  "usingComponents": {
-    "uni-nav-bar": "/components/uni-nav-bar/uni-nav-bar"
-  }
-}

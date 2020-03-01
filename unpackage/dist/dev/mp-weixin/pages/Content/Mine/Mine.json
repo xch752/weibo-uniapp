@@ -1,7 +1,0 @@
-{
-  "navigationBarTitleText": "我的",
-  "navigationStyle": "custom",
-  "usingComponents": {
-    "waterfall-flow": "/components/nairenk-waterfall-flow/nairenk-waterfall-flow"
-  }
-}

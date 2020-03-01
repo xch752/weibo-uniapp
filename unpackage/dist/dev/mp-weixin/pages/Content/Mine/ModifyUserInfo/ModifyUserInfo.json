@@ -1,9 +1,0 @@
-{
-  "navigationBarTitleText": "编辑资料",
-  "navigationStyle": "custom",
-  "usingComponents": {
-    "uni-nav-bar": "/components/uni-nav-bar/uni-nav-bar",
-    "uni-icon": "/components/uni-icons/uni-icons",
-    "h-form-alert": "/components/h-form-alert/h-form-alert"
-  }
-}

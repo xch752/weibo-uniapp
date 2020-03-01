@@ -1,7 +1,0 @@
-{
-  "navigationBarTitleText": "评论",
-  "navigationStyle": "custom",
-  "usingComponents": {
-    "uni-nav-bar": "/components/uni-nav-bar/uni-nav-bar"
-  }
-}

@@ -1,8 +1,0 @@
-{
-  "navigationBarTitleText": "发微博",
-  "navigationStyle": "custom",
-  "usingComponents": {
-    "uni-nav-bar": "/components/uni-nav-bar/uni-nav-bar",
-    "h-form-alert": "/components/h-form-alert/h-form-alert"
-  }
-}
