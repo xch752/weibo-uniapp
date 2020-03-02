@@ -51,7 +51,10 @@
         }
         ,{
             "path" : "pages/Content/MicroBlog/MicroBlog",
-            "style" : {}
+            "style" : {
+				"navigationBarTitleText": "详情",
+            	"navigationStyle": "custom"
+			}
         }
         ,{
             "path" : "pages/Content/Comment/Comment",
@@ -85,6 +88,13 @@
             "path" : "pages/Content/Fans/Fans",
             "style" : {
 				"navigationBarTitleText": "粉丝",
+            	"navigationStyle": "custom"
+			}
+        }
+        ,{
+            "path" : "pages/Content/User/User",
+            "style" : {
+				"navigationBarTitleText": "查看用户",
             	"navigationStyle": "custom"
 			}
         }
@@ -135,7 +145,8 @@
 			},
 			{
 				"name": "MicroBlog",
-				"path": "pages/Content/MicroBlog/MicroBlog"
+				"path": "pages/Content/MicroBlog/MicroBlog",
+				"query": "microBlogId=9b7c5e3167"
 			},
 			{
 				"name": "Comment",
@@ -156,6 +167,11 @@
 				"name": "Fans",
 				"path": "pages/Content/Fans/Fans",
 				"query": "objectId=ecf5432115"
+			},
+			{
+				"name": "User",
+				"path": "pages/Content/User/User",
+				"query": "objectId=n7HGPPPY"
 			}
 		]
 	}

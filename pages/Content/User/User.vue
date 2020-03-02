@@ -3,11 +3,13 @@
 		<view class="full">
 			<view class="header">
 				<view class="setting">
-					<image style="width:48upx;height:48upx" src="../../../static/img/more.png" mode="aspectFill" @click.stop="moreActionSheetTap()"></image>
+					<image style="width:48upx;height:48upx" src="../../../static/img/back.png" mode="aspectFill" @click.stop="navBack"></image>
 				</view>
 				<view class="avatar" :style="{'background-image':'url('+userInfo.avatarUrl+')'}"></view>
 			</view>
 			<view class="info solid-bottom" style="margin-bottom:20upx">
+				<view v-if="!attentionShow && objectId!=myObjectId" @click="attention" class="attention-active text-white"><text class="cuIcon-add"></text> 关注</view>
+				<view v-if="attentionShow && objectId!=myObjectId" @click="unAttention" class="attention text-gray">已关注</view>
 				<view>
 					<text class="text-xl text-bold">{{userInfo.nickname}}</text>
 				</view>
@@ -15,13 +17,12 @@
 					<text class="text-df text-gray">id:{{userInfo.objectId}}</text>
 				</view>
 				<view v-if="userInfo.introduction">
-					<text class="text-df text-gray">{{userInfo.introduction}}</text>
+					<text class="text-df text-black">{{userInfo.introduction}}</text>
 				</view>
 				<view class="flex justify-start" style="flex-flow:row wrap;padding-top: 10upx;padding-bottom:0upx;">
 					<text class="bg-gray light radius text-sm" style="padding: 5upx 15upx;margin-right:15upx" v-if="userInfo.age">{{userInfo.age}}</text>
 					<text class="bg-gray light radius text-sm" style="padding: 5upx 15upx;margin-right:15upx" v-if="userInfo.address">{{userInfo.address}}</text>
 					<text class="bg-gray light radius text-sm" style="padding: 5upx 15upx;margin-right:15upx" v-if="userInfo.constellation">{{userInfo.constellation}}座</text>
-					<text class="bg-gray light radius text-sm" style="padding: 5upx 15upx;margin-right:15upx" @click="toModifyUserInfo"><text class="cuIcon-write"></text> 编辑资料</text>
 				</view>
 				<view class="flex justify-start" style="flex-flow:row wrap;padding-top: 35upx;padding-bottom:10upx;">
 					<text class="text-bold text-df" style="padding: 5upx 15upx;margin-right:15upx">{{data.blogCount}}<text class="normal">微博</text></text>
@@ -47,6 +48,9 @@
 			return{
 				pageSize:10,
 				pageNum:1,
+				// 登录用户的id
+				myObjectId:'',
+				// 查看的用户id
 				objectId:'',
 				userInfo:{
 					avatarUrl:'http://static.xch752.com/mine_background.jpg', // 初始值
@@ -67,11 +71,18 @@
 				list:[],
 				btnShow: false,
 				scrollTop:0,
-				oldScrollTop:0
+				oldScrollTop:0,
+				attentionShow: false
 			}
 		},
-		onLoad(){
+		onLoad:function(option){
+			this.objectId = option.objectId
+			console.log('this.objectId',this.objectId)
 			setTimeout(()=>{
+				let queryObject = {
+					userInfo: true
+				}
+				this.initDataCount(queryObject)
 				this.initDataBlog()
 			},100)
 		},
@@ -79,18 +90,28 @@
 			this.getSysInfo()
 			this.loadUserData()
 			setTimeout(()=>{
-				this.initDataCount()
+				let queryObject = {
+					blogCount: true,
+					fansCount: true,
+					attentionCount: true,
+					collectCount: true,
+					likeCount: true,
+					isAttention: true,
+					userInfo: false
+				}
+				this.initDataCount(queryObject)
 			},100)
 		},
 		methods:{
 			loadUserData(){//获取用户信息
 				try {
-					if(!this.objectId){
-						this.objectId = uni.getStorageSync('bmob').objectId
+					if(!this.myObjectId){
+						this.myObjectId = uni.getStorageSync('bmob').objectId
 						this.userInfo = uni.getStorageSync('bmob')
+						console.log('this.myObjectId',this.myObjectId)
 					}				
-					if (!this.objectId) {
-						console.log('this.objectId',this.objectId)
+					if (!this.myObjectId) {
+						console.log('this.objectId',this.myObjectId)
 						console.log(uni.getStorageSync('bmob').objectId)
 						uni.reLaunch({
 							url:'../../Login/Login',
@@ -103,30 +124,10 @@
 							}
 						})
 					}
-					if(this.objectId){
-						const query = Bmob.Query('_User');//查询登陆用户具体信息
-						query.get(this.objectId).then(res => {
-							Object.assign(this.userInfo,res)
-							if(this.userInfo.birthday){
-								this.userInfo.age = ( "00" + (parseInt(this.userInfo.birthday.slice(2,4))-parseInt(this.userInfo.birthday.slice(2,4))%5).toString() ).substr( -2 )+'后'
-								this.userInfo.constellation = this.getAstro(this.userInfo.birthday.slice(5,7),this.userInfo.birthday.slice(8,10))
-							}
-							if(this.userInfo.city){
-								this.userInfo.address=`${this.userInfo.city.split(',')[1]} ${this.userInfo.city.split(',')[2]}`
-							}
-							try {
-								uni.setStorageSync('bmob', res)
-							} catch (e) {
-								console.log(e)
-							}
-						}).catch(err => {
-							console.log(err)
-						})
-					}
 				} catch (e) {
 					// error
 					console.log(e)
-					console.log('this.objectId',this.objectId)
+					console.log('this.myObjectId',this.myObjectId)
 					uni.reLaunch({
 						url:'../../Login/Login',
 						success:()=>{
@@ -148,39 +149,6 @@
 					}
 				})
 			},
-			moreActionSheetTap(){
-				uni.showActionSheet({
-					itemList: ['退出登录', '反馈'],
-					success: (e) => {
-						switch(e.tapIndex){
-							case 0:
-								uni.showModal({
-									title: '提示',
-									content: '确认退出',
-									success: (res) => {
-										if (res.confirm) {
-											Bmob.User.logout()
-											uni.reLaunch({
-												 url: '../../Login/Login'
-											})
-										} else if (res.cancel) {
-											console.log('用户点击取消');
-										}
-									}
-								});
-								break
-							case 1:
-								uni.showToast({
-									title: '反馈',
-									duration: 2000
-								})
-								break
-							default:
-								break
-						}
-					}
-				})
-			},
 			scroll: function(e) {
 				this.oldScrollTop = e.detail.scrollTop
 				if(e.detail.deltaY<=0){
@@ -199,33 +167,74 @@
 				})
 				this.initDataBlog()
 			},
-			// 获取数据
-			initDataCount(){
-				const queryFans = Bmob.Query('Attention')
-				queryFans.equalTo('bloger','===',this.objectId)
-				queryFans.count().then(res=>{
-					this.data.fansCount = res
-				})
-				const queryAttention = Bmob.Query('Attention')
-				queryAttention.equalTo('fans','===',this.objectId)
-				queryAttention.count().then(res=>{
-					this.data.attentionCount = res
-				})
-				const queryCollect = Bmob.Query('Collect')
-				queryCollect.equalTo('creator','===',this.objectId)
-				queryCollect.count().then(res=>{
-					this.data.collectCount = res
-				})
-				const queryLike = Bmob.Query('Like')
-				queryLike.equalTo('creator','===',this.objectId)
-				queryLike.count().then(res=>{
-					this.data.likeCount = res
-				})
-				const queryBlog = Bmob.Query('MicroBlog')
-				queryBlog.equalTo('creator','===',this.objectId)
-				queryBlog.count().then(res=>{
-					this.data.blogCount = res
-				})
+			// 获取数据 blogCount,fansCount,attentionCount,collectCount,likeCount,isAttention,userInfo
+			initDataCount(queryObject){
+				if(queryObject.blogCount==true){
+					const queryBlog = Bmob.Query('MicroBlog')
+					queryBlog.equalTo('creator','===',this.objectId)
+					queryBlog.count().then(res=>{
+						this.data.blogCount = res
+					})
+				}
+				if(queryObject.fansCount==true){
+					const queryFans = Bmob.Query('Attention')
+					queryFans.equalTo('bloger','===',this.objectId)
+					queryFans.count().then(res=>{
+						this.data.fansCount = res
+					})
+				}
+				if(queryObject.attentionCount==true){
+					const queryAttention = Bmob.Query('Attention')
+					queryAttention.equalTo('fans','===',this.objectId)
+					queryAttention.count().then(res=>{
+						this.data.attentionCount = res
+					})
+				}
+				if(queryObject.collectCount==true){
+					const queryCollect = Bmob.Query('Collect')
+					queryCollect.equalTo('creator','===',this.objectId)
+					queryCollect.count().then(res=>{
+						this.data.collectCount = res
+					})
+				}
+				if(queryObject.likeCount==true){
+					const queryLike = Bmob.Query('Like')
+					queryLike.equalTo('creator','===',this.objectId)
+					queryLike.count().then(res=>{
+						this.data.likeCount = res
+					})
+				}
+				if(queryObject.isAttention==true){
+					const queryIsAttention = Bmob.Query('Attention')
+					queryIsAttention.equalTo('bloger','===',this.objectId)
+					queryIsAttention.equalTo('fans','===',this.myObjectId)
+					queryIsAttention.count().then(res=>{
+						// if(this.objectId!=this.myObjectId){
+						// 	this.attentionShow = false
+						// }
+						if(res!=0){
+							this.attentionShow = true
+						}else{
+							this.attentionShow = false
+						}
+					})
+				}
+				if(queryObject.userInfo==true){
+					const query = Bmob.Query('_User')
+					query.get(this.objectId).then(res => {
+						Object.assign(this.userInfo,res)
+						if(this.userInfo.birthday){
+							this.userInfo.age = ( "00" + (parseInt(this.userInfo.birthday.slice(2,4))-parseInt(this.userInfo.birthday.slice(2,4))%5).toString() ).substr( -2 )+'后'
+							this.userInfo.constellation = this.getAstro(this.userInfo.birthday.slice(5,7),this.userInfo.birthday.slice(8,10))
+						}
+						if(this.userInfo.city){
+							this.userInfo.address=`${this.userInfo.city.split(',')[1]} ${this.userInfo.city.split(',')[2]}`
+						}
+						console.log(this.userInfo)
+					}).catch(err => {
+						console.log(err)
+					})
+				}
 			},
 			// 获取Blog数据
 			initDataBlog(){
@@ -235,6 +244,7 @@
 				queryBlog.include('creator')
 				queryBlog.limit(this.pageSize)
 				queryBlog.order('-createdAt')
+				console.log('queryBlog',queryBlog)
 				queryBlog.find().then(res=>{
 					console.log(res)
 					res.map(item=>{
@@ -280,15 +290,10 @@
 					this.loading = false
 				})
 			},
-			toModifyUserInfo(){
-				uni.navigateTo({
-					url:`ModifyUserInfo/ModifyUserInfo?objectId=${this.objectId}`,
-					success: (res) => {
-						console.log(res)
-					},
-					fail: (err) => {
-						console.log(err)
-					}
+			// 返回
+			navBack(){
+				uni.navigateBack({
+					delta: 1
 				})
 			},
 			toFans(){
@@ -309,6 +314,57 @@
 			},
 			getAstro(m,d){
 				return "魔羯水瓶双鱼牡羊金牛双子巨蟹狮子处女天秤天蝎射手魔羯".substr(m*2-(d<"102223444433".charAt(m-1)- -19)*2,2);
+			},
+			// 关注
+			attention(){
+				// 关联自己
+				const pointer = this.Bmob.Pointer('_User')
+				const poiID = pointer.set(this.myObjectId)
+				// 关联被博主
+				const pointer_bloger = this.Bmob.Pointer('_User')
+				const poiID_bloger = pointer.set(this.objectId)
+				// 写入数据库Attention表 写入收藏记录
+				const query = Bmob.Query('Attention')
+				query.set('fans',poiID)
+				query.set('bloger',poiID_bloger)
+				query.save().then(res => {
+					console.log('res',res)
+					let queryObject = {
+						isAttention: true,
+						fansCount: true
+					}
+					this.initDataCount(queryObject)
+					uni.showToast({
+						title: '关注成功',
+						duration: 2000
+					})
+				}).catch(err =>{
+					uni.showToast({
+						title: '关注失败',
+						duration: 200,
+						icon: 'none'
+					})
+				})
+			},
+			// 取消关注
+			unAttention(){
+				const query = Bmob.Query('Attention')
+				query.equalTo("bloger", '===', this.objectId)
+				query.equalTo("fans", '===', this.myObjectId)
+				query.find().then(res => {
+					console.log('res',res)
+					const queryD = Bmob.Query('Attention')
+					queryD.destroy(res[0].objectId).then(resD => {
+						console.log('resD',resD)
+						let queryObject = {
+							isAttention: true,
+							fansCount: true
+						}
+						this.initDataCount(queryObject)
+					}).catch(errD => {
+						console.log(errD)
+					})
+				})
 			}
 		}
 	}
@@ -351,6 +407,31 @@
 		background-size: cover;
 		background-position: center;
 		-moz-box-shadow:1px 1px 3px #888888; -webkit-box-shadow:1px 1px 3px #888888; box-shadow:1px 1px 3px #888888;
+	}
+	.attention{
+		position: absolute;
+		top:20upx;
+		right:40upx;
+		width: 120upx;
+		height: 50upx;
+		border-radius: 999upx;
+		border:2upx solid gray;
+		background-size: cover;
+		background-position: center;
+		line-height: 50upx;
+		text-align: center
+	}
+	.attention-active{
+		position: absolute;
+		top:20upx;
+		right:40upx;
+		width: 120upx;
+		height: 50upx;
+		border-radius: 999upx;
+		border:2upx solid white;
+		line-height: 50upx;
+		text-align: center;
+		background: #9ed0ff;
 	}
 	.info{
 		padding: 80upx 0 0 75upx;

@@ -175,10 +175,10 @@
 			},
 			// 发布
 			submitMSG(){
-				if((!this.bodyValue)&&(this.imgList.length==0)){
+				if(this.imgList.length==0){
 					uni.showModal({
 						title:'提示',
-						content:'发送内容不能为空',
+						content:'请至少选择一张图片',
 						showCancel:false
 					})
 				}else{

@@ -1,13 +1,13 @@
 <template>
 	<view class="full">
 		<uni-nav-bar left-icon="plus" @click-left="toAdd" :status-bar="true" shadow="true" fixed="true" titleIcon="http://static.xch752.com/logo_whiteBG_256.png"></uni-nav-bar>
-		<scroll-view :style="{'height':windowHeight+'px'}" scroll-y="true" @scrolltolower="currentChange" @scroll="scroll" >
+		<scroll-view :scroll-top="scrollTop" :style="{'height':windowHeight+'px'}" scroll-y="true" @scrolltolower="currentChange" @scroll="scroll" >
 			<view class="cu-card dynamic solid-bottom margin-bottom-sm" :class="isCard?'no-card':''" v-for="(item,index) in blogList" :key="index" @click="toMicroBlog(item.objectId)">
 				<view class="cu-item shadow">
 					<!-- 头像部分 -->
 					<view class="cu-list menu-avatar">
 						<view class="cu-item">
-							<image class="cu-avatar round" style="width:80upx;height:80upx" :src="item.creator.avatarUrl" mode="aspectFill" :lazy-load="isLazyLoad"></image>
+							<image class="cu-avatar round" style="width:80upx;height:80upx" :src="item.creator.avatarUrl" mode="aspectFill" :lazy-load="isLazyLoad" @click.stop="toUser(item.creator.objectId)"></image>
 							<view class="content flex-sub">
 								<view class="flex justify-between">
 									<text class="text-df text-bold">{{item.creator.nickname}}</text>
@@ -61,6 +61,8 @@
 				</view>
 			</view>
 		</scroll-view>
+		<!-- fab -->
+		<button v-show="btnShow" class="fab" @click="goTop"></button>
 	</view>
 </template>
 
@@ -72,13 +74,16 @@
 		components: {uniNavBar,hFormAlert},
 		data() {
 			return {
+				scrollTop:0,
+				oldScrollTop:0,
 				isCard: true,
 				blogList:[],
 				isLazyLoad:true,
 				objectId:'',
 				pageNum:1,
 				pageSize:10,
-				windowHeight:0
+				windowHeight:0,
+				btnShow:true
 			}
 		},
 		onLoad() {
@@ -134,9 +139,9 @@
 					url: '../Add/Add'
 				})
 			},
-			toMicroBlog(id){
+			toMicroBlog(objectId){
 				uni.navigateTo({
-					url: `../MicroBlog/MicroBlog?objectId=${id}`
+					url: `../MicroBlog/MicroBlog?microBlogId=${objectId}`
 				})
 			},
 			toComment(objectId){
@@ -154,6 +159,11 @@
 					url: `../Report/Report?microBlogId=${objectId}`
 				})
 			},
+			toUser(objectId){
+				uni.navigateTo({
+					url: `../User/User?objectId=${objectId}`
+				})
+			},
 			// 大图预览 + 保存到相册
 			previewImg(list,index){
 				uni.previewImage({
@@ -169,6 +179,24 @@
 						}
 					}
 				})
+			},
+			scroll: function(e) {
+				this.oldScrollTop = e.detail.scrollTop
+				if(e.detail.deltaY<=0){
+					this.btnShow = false
+				}else{
+					this.btnShow = true
+				}
+				if(this.oldScrollTop == 0){
+					this.btnShow = false
+				}
+			},
+			goTop: function(e){
+				this.scrollTop = this.oldScrollTop
+            	this.$nextTick(function() {
+					this.scrollTop = 0
+				})
+				this.initBlogList()
 			},
 			// 初始化首页数据
 			initBlogList(){
@@ -358,9 +386,6 @@
 				}).catch(err => {
 					console.log(err)
 				})
-			},
-			scroll: function(e) {
-				// console.log(e)
 			},
 			// 点赞
 			like(itemid,index,creatorid){
@@ -659,5 +684,16 @@
 	}
 	.uni-more-content{
 		border-bottom: 1upx solid #f0f0f0;
+	}
+	.fab{
+		position: fixed;
+		bottom:50upx;
+		right:50upx;
+		width:100upx;
+		height: 100upx;
+		border-radius: 50%;
+		background: url('../../../static/img/fresh.png') no-repeat;
+		background-size: 100% 100%;
+		-moz-box-shadow:1px 1px 3px #888888; -webkit-box-shadow:1px 1px 3px #888888; box-shadow:1px 1px 3px #888888;
 	}
 </style>
