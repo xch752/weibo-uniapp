@@ -105,6 +105,20 @@
             	"navigationStyle": "custom"
 			}
         }
+        ,{
+            "path" : "pages/Content/Collect/Collect",
+            "style" : {
+				"navigationBarTitleText": "收藏",
+            	"navigationStyle": "custom"
+			}
+        }
+        ,{
+            "path" : "pages/Content/Liked/Liked",
+            "style" : {
+				"navigationBarTitleText": "点赞",
+            	"navigationStyle": "custom"
+			}
+        }
     ],
 	"globalStyle": {
 		"navigationBarTextStyle": "white",
@@ -183,6 +197,16 @@
 			{
 				"name": "Attention",
 				"path": "pages/Content/Attention/Attention",
+				"query": "objectId=n7HGPPPY"
+			},
+			{
+				"name": "Collect",
+				"path": "pages/Content/Collect/Collect",
+				"query": "objectId=n7HGPPPY"
+			},
+			{
+				"name": "Liked",
+				"path": "pages/Content/Liked/Liked",
 				"query": "objectId=n7HGPPPY"
 			}
 		]

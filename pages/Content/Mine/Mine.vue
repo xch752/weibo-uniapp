@@ -26,9 +26,9 @@
 				<view class="flex justify-start" style="flex-flow:row wrap;padding-top: 35upx;padding-bottom:10upx;">
 					<text class="text-bold text-df" style="padding: 5upx 15upx;margin-right:15upx">{{data.blogCount}}<text class="normal">微博</text></text>
 					<text @click="toFans" class="text-bold text-df" style="padding: 5upx 15upx;margin-right:15upx">{{data.fansCount}}<text class="normal">粉丝</text></text>
-					<text class="text-bold text-df" style="padding: 5upx 15upx;margin-right:15upx">{{data.attentionCount}}<text class="normal">关注</text></text>
-					<text class="text-bold text-df" style="padding: 5upx 15upx;margin-right:15upx">{{data.collectCount}}<text class="normal">收藏</text></text>
-					<text class="text-bold text-df" style="padding: 5upx 15upx;margin-right:15upx">{{data.likeCount}}<text class="normal">点赞</text></text>
+					<text @click="toAttention" class="text-bold text-df" style="padding: 5upx 15upx;margin-right:15upx">{{data.attentionCount}}<text class="normal">关注</text></text>
+					<text @click="toCollect" class="text-bold text-df" style="padding: 5upx 15upx;margin-right:15upx">{{data.collectCount}}<text class="normal">收藏</text></text>
+					<text @click="toLiked" class="text-bold text-df" style="padding: 5upx 15upx;margin-right:15upx">{{data.likeCount}}<text class="normal">点赞</text></text>
 				</view>	
 			</view>
 			<WaterfallFlow :list="list" :loading="loading" @click="toMicroBlog"></WaterfallFlow>
@@ -229,6 +229,7 @@
 			},
 			// 获取Blog数据
 			initDataBlog(){
+				this.pageNum = 1
 				this.loading = true
 				const queryBlog = Bmob.Query('MicroBlog')
 				queryBlog.equalTo('creator','===',this.objectId)
@@ -294,6 +295,39 @@
 			toFans(){
 				uni.navigateTo({
 					url:`../Fans/Fans?objectId=${this.objectId}`,
+					success: (res) => {
+						console.log(res)
+					},
+					fail: (err) => {
+						console.log(err)
+					}
+				})
+			},
+			toAttention(){
+				uni.navigateTo({
+					url:`../Attention/Attention?objectId=${this.objectId}`,
+					success: (res) => {
+						console.log(res)
+					},
+					fail: (err) => {
+						console.log(err)
+					}
+				})
+			},
+			toCollect(){
+				uni.navigateTo({
+					url:`../Collect/Collect?objectId=${this.objectId}`,
+					success: (res) => {
+						console.log(res)
+					},
+					fail: (err) => {
+						console.log(err)
+					}
+				})
+			},
+			toLiked(){
+				uni.navigateTo({
+					url:`../Liked/Liked?objectId=${this.objectId}`,
 					success: (res) => {
 						console.log(res)
 					},

@@ -3,7 +3,7 @@
 		<uni-nav-bar left-icon="back" @click-left="navBack" :status-bar="true" shadow="true" fixed="true" title="粉丝"></uni-nav-bar>
 		<scroll-view v-if="fansList.length === 0?false:true" :style="{'height':windowHeight+'px'}" @scrolltolower="currentChange"  scroll-y="true">
 			<view class="cu-list menu-avatar">
-				<view class="cu-item" v-for="(item,index) in fansList" :key="index">
+				<view class="cu-item" v-for="(item,index) in fansList" :key="index" @click="toUser(item.fans.objectId)">
 					<view class="cu-avatar round lg" :style="{'background-image':'url('+item.fans.avatarUrl+')'}"></view>
 					<view class="content">
 						<view class="text-black text-bold">{{item.fans.nickname}}</view>
@@ -55,6 +55,11 @@
 			navBack(){
 				uni.navigateBack({
 					delta: 1
+				})
+			},
+			toUser(objectId){
+				uni.navigateTo({
+					url: `../User/User?objectId=${objectId}`
 				})
 			},
 			// 初始化消息
