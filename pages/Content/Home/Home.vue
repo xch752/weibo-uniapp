@@ -1,5 +1,5 @@
 <template>
-	<view class="full">
+	<view :class="blogList.length === 0 ? '' : 'full'">
 		<uni-nav-bar left-icon="plus" @click-left="toAdd" :status-bar="true" shadow="true" fixed="true" titleIcon="http://static.xch752.com/logo_whiteBG_256.png"></uni-nav-bar>
 		<scroll-view :scroll-top="scrollTop" :style="{'height':windowHeight+'px'}" scroll-y="true" @scrolltolower="currentChange" @scroll="scroll" >
 			<view class="cu-card dynamic solid-bottom margin-bottom-sm" :class="isCard?'no-card':''" v-for="(item,index) in blogList" :key="index" @click="toMicroBlog(item.objectId)">
@@ -58,6 +58,12 @@
 							<text class="bg-gray round text-bold text-sm" style="padding: 5upx 30upx">{{item.Geolocation.name}}</text>
 						</view>
 					</view>
+				</view>
+			</view>
+			<view v-if="blogList.length === 0?true:false" class="flex justify-center align-center" :style="{'height':windowHeight+'px'}">
+				<view style="text-align:center">
+					<image src="http://static.xch752.com/undraw_Mobile_app_p3ts.png" mode="aspectFit" style="width: 200upx;height: 170upx;"></image>
+					<view class="text-gray margin-top-sm">还没有关注</view>
 				</view>
 			</view>
 		</scroll-view>
@@ -204,88 +210,125 @@
 				var countNumberLike = 0 
 				var countNumberComment = 0 
 				var countNumberCollect = 0 
-				// 查表MicroBlog
-				var query = Bmob.Query('MicroBlog')
-				// 查询详细creator
-				query.include('creator')
-				// 按创建时间倒序
-				query.order("-createdAt")
-				// 一次加载pageSize条
-				query.limit(this.pageSize)
 				uni.showLoading({
 					title: '加载中'
 				})
-				query.find().then(res_blog => {
-					// 数据处理
-					res_blog.map((item_blog,index_blog)=>{
-						item_blog.isLike = false
-						item_blog.isCollect = false
-						item_blog.createdAt = this.getDateDiff(item_blog.createdAt)
-						// 分割imgList
-						if(item_blog.imgList){
-							item_blog.imgList=item_blog.imgList.split(",")
-						}
-						// 分割tag
-						if(item_blog.tag){
-							item_blog.tag=item_blog.tag.split(",")
-						}
-						// 查询点赞的关联关系
-						let queryLike = Bmob.Query('MicroBlog')
-						queryLike.field('likes',item_blog.objectId)
-						// 查询点赞的具体的用户信息
-						queryLike.relation('Like').then(res_like => {
-							item_blog.likes = res_like
-							// 查询是否点赞这条帖子 方法一
-							for(var i = 0; i < res_like.results.length; i++){
-								if(res_like.results[i].creator.objectId === this.objectId){
-									item_blog.isLike = true
-									break
-								}
-							}
-							countNumberLike = countNumberLike + 1
-							if(countNumberLike === res_blog.length && countNumberComment === res_blog.length && countNumberCollect === res_blog.length){
-								this.blogList=res_blog
-								uni.hideLoading()
-								console.log('this.blogList',this.blogList)
-							}
+				var queryAttention = Bmob.Query('Attention')
+				queryAttention.equalTo('fans','===',this.objectId)
+				queryAttention.order("-createdAt")
+				queryAttention.limit(1000)
+				queryAttention.find().then(res_attention=>{
+					// console.log(res_attention)
+					if(res_attention.length!=0){
+						// 查表MicroBlog
+						var query = Bmob.Query('MicroBlog')
+						// 查询详细creator
+						query.include('creator')
+						// 条件查询关注的人
+						var queryA = new Array()
+						res_attention.map((item,index)=>{
+							queryA[index] = query.equalTo('creator','===',item.bloger.objectId)
 						})
-						// 查询评论的关联关系
-						let queryComment = Bmob.Query('MicroBlog')
-						queryComment.field('comments',item_blog.objectId)
-						// 查询评论的具体用户信息
-						queryComment.relation('Comment').then(res_comment => {
-							item_blog.comments = res_comment
-							countNumberComment = countNumberComment + 1
-							if(countNumberLike === res_blog.length && countNumberComment === res_blog.length && countNumberCollect === res_blog.length){
+						query.or(...queryA)
+						// 按创建时间倒序
+						query.order("-createdAt")
+						// 一次加载pageSize条
+						query.limit(this.pageSize)
+						query.find().then(res_blog => {
+							console.log(res_blog)
+							if(res_blog.length==0){
+								uni.hideLoading()
+								return
+							}
+							// 数据处理
+							res_blog.map((item_blog,index_blog)=>{
+								item_blog.isLike = false
+								item_blog.isCollect = false
+								item_blog.createdAt = this.getDateDiff(item_blog.createdAt)
+								// 分割imgList
+								if(item_blog.imgList){
+									item_blog.imgList=item_blog.imgList.split(",")
+								}
+								// 分割tag
+								if(item_blog.tag){
+									item_blog.tag=item_blog.tag.split(",")
+								}
+								// 查询点赞的关联关系
+								let queryLike = Bmob.Query('MicroBlog')
+								queryLike.field('likes',item_blog.objectId)
+								// 查询点赞的具体的用户信息
+								queryLike.relation('Like').then(res_like => {
+									item_blog.likes = res_like
+									// 查询是否点赞这条帖子 方法一
+									for(var i = 0; i < res_like.results.length; i++){
+										if(res_like.results[i].creator.objectId === this.objectId){
+											item_blog.isLike = true
+											break
+										}
+									}
+									countNumberLike = countNumberLike + 1
+									if(countNumberLike === res_blog.length && countNumberComment === res_blog.length && countNumberCollect === res_blog.length){
+										this.blogList=res_blog
+										uni.hideLoading()
+										console.log('this.blogList',this.blogList)
+									}
+								})
+								// 查询评论的关联关系
+								let queryComment = Bmob.Query('MicroBlog')
+								queryComment.field('comments',item_blog.objectId)
+								// 查询评论的具体用户信息
+								queryComment.relation('Comment').then(res_comment => {
+									item_blog.comments = res_comment
+									countNumberComment = countNumberComment + 1
+									if(countNumberLike === res_blog.length && countNumberComment === res_blog.length && countNumberCollect === res_blog.length){
 
-								this.blogList=res_blog
-								uni.hideLoading()
-								console.log('this.blogList',this.blogList)
-							}
+										this.blogList=res_blog
+										uni.hideLoading()
+										console.log('this.blogList',this.blogList)
+									}
+								})
+								// 查询收藏的关联关系
+								let queryCollect = Bmob.Query('MicroBlog')
+								queryCollect.field('collects',item_blog.objectId)
+								// 查询收藏的具体的用户信息
+								queryCollect.relation('Collect').then(res_collect => {
+									item_blog.collects = res_collect
+									// 查询是否收藏这条帖子 方法一
+									for(var i = 0; i < res_collect.results.length; i++){
+										if(res_collect.results[i].creator.objectId === this.objectId){
+											item_blog.isCollect = true
+											break
+										}
+									}
+									countNumberCollect = countNumberCollect + 1
+									if(countNumberLike === res_blog.length && countNumberComment === res_blog.length && countNumberCollect === res_blog.length){
+										this.blogList=res_blog
+										uni.hideLoading()
+										console.log('this.blogList',this.blogList)
+									}
+								})
+							})
+						}).catch(err => {
+							console.log(err)
+							uni.hideLoading()
+							uni.showToast({
+								title: err.error,
+								duration: 2000,
+								icon: 'none'
+							})
 						})
-						// 查询收藏的关联关系
-						let queryCollect = Bmob.Query('MicroBlog')
-						queryCollect.field('collects',item_blog.objectId)
-						// 查询收藏的具体的用户信息
-						queryCollect.relation('Collect').then(res_collect => {
-							item_blog.collects = res_collect
-							// 查询是否收藏这条帖子 方法一
-							for(var i = 0; i < res_collect.results.length; i++){
-								if(res_collect.results[i].creator.objectId === this.objectId){
-									item_blog.isCollect = true
-									break
-								}
-							}
-							countNumberCollect = countNumberCollect + 1
-							if(countNumberLike === res_blog.length && countNumberComment === res_blog.length && countNumberCollect === res_blog.length){
-								this.blogList=res_blog
-								uni.hideLoading()
-								console.log('this.blogList',this.blogList)
-							}
-						})
-					})
+					}else{
+						uni.hideLoading()
+						this.blogList = []
+					}
 				}).catch(err => {
 					console.log(err)
+					uni.hideLoading()
+					uni.showToast({
+						title: err.error,
+						duration: 2000,
+						icon: 'none'
+					})
 				})
 			},
 			// 下拉加载
@@ -293,99 +336,131 @@
 				var countNumberLike = 0 
 				var countNumberComment = 0 
 				var countNumberCollect = 0 
-				// 查表MicroBlog
-				var query = Bmob.Query('MicroBlog')
-				// 查询详细creator
-				query.include('creator')
-				// 按创建时间倒序
-				query.order("-createdAt")
-				// 一次加载pageSize条
-				query.limit(this.pageSize)
-				// 跳过
-				query.skip(this.pageSize*(this.pageNum))
 				uni.showLoading({
 					title: '加载中'
 				})
-				query.find().then(res_blog => {
-					if(res_blog.length===0){
-						uni.showToast({
-							title: '没有更多了',
-							duration: 2000,
-							icon:'none'
+				var queryAttention = Bmob.Query('Attention')
+				queryAttention.equalTo('fans','===',this.objectId)
+				queryAttention.order("-createdAt")
+				queryAttention.limit(1000)
+				queryAttention.find().then(res_attention=>{
+					// console.log(res_attention)
+					if(res_attention.length!=0){
+						// 查表MicroBlog
+						var query = Bmob.Query('MicroBlog')
+						// 查询详细creator
+						query.include('creator')
+						// 条件查询关注的人
+						var queryA = new Array()
+						res_attention.map((item,index)=>{
+							queryA[index] = query.equalTo('creator','===',item.bloger.objectId)
+						})
+						query.or(...queryA)
+						// 按创建时间倒序
+						query.order("-createdAt")
+						// 一次加载pageSize条
+						query.limit(this.pageSize)
+						query.skip(this.pageSize*this.pageNum)
+						query.find().then(res_blog => {
+							console.log(res_blog)
+							if(res_blog.length==0){
+								uni.hideLoading()
+								uni.showToast({
+									title: '没有更多了',
+									duration: 2000,
+									icon:'none'
+								})
+								return
+							}
+							this.pageNum++
+							// 数据处理
+							res_blog.map((item_blog,index_blog)=>{
+								item_blog.isLike = false
+								item_blog.isCollect = false
+								item_blog.createdAt = this.getDateDiff(item_blog.createdAt)
+								// 分割imgList
+								if(item_blog.imgList){
+									item_blog.imgList=item_blog.imgList.split(",")
+								}
+								// 分割tag
+								if(item_blog.tag){
+									item_blog.tag=item_blog.tag.split(",")
+								}
+								// 查询点赞的关联关系
+								let queryLike = Bmob.Query('MicroBlog')
+								queryLike.field('likes',item_blog.objectId)
+								// 查询点赞的具体的用户信息
+								queryLike.relation('Like').then(res_like => {
+									item_blog.likes = res_like
+									// 查询是否点赞这条帖子 方法一
+									for(var i = 0; i < res_like.results.length; i++){
+										if(res_like.results[i].creator.objectId === this.objectId){
+											item_blog.isLike = true
+											break
+										}
+									}
+									countNumberLike = countNumberLike + 1
+									if(countNumberLike === res_blog.length && countNumberComment === res_blog.length && countNumberCollect === res_blog.length){
+										this.blogList=this.blogList.concat(res_blog)
+										uni.hideLoading()
+										console.log('this.blogList',this.blogList)
+									}
+								})
+								// 查询评论的关联关系
+								let queryComment = Bmob.Query('MicroBlog')
+								queryComment.field('comments',item_blog.objectId)
+								// 查询评论的具体用户信息
+								queryComment.relation('Comment').then(res_comment => {
+									item_blog.comments = res_comment
+									countNumberComment = countNumberComment + 1
+									if(countNumberLike === res_blog.length && countNumberComment === res_blog.length && countNumberCollect === res_blog.length){
+										this.blogList=this.blogList.concat(res_blog)
+										uni.hideLoading()
+										console.log('this.blogList',this.blogList)
+									}
+								})
+								// 查询收藏的关联关系
+								let queryCollect = Bmob.Query('MicroBlog')
+								queryCollect.field('collects',item_blog.objectId)
+								// 查询收藏的具体的用户信息
+								queryCollect.relation('Collect').then(res_collect => {
+									item_blog.collects = res_collect
+									// 查询是否收藏这条帖子 方法一
+									for(var i = 0; i < res_collect.results.length; i++){
+										if(res_collect.results[i].creator.objectId === this.objectId){
+											item_blog.isCollect = true
+											break
+										}
+									}
+									countNumberCollect = countNumberCollect + 1
+									if(countNumberLike === res_blog.length && countNumberComment === res_blog.length && countNumberCollect === res_blog.length){
+										this.blogList=res_blog
+										uni.hideLoading()
+										console.log('this.blogList',this.blogList)
+									}
+								})
+							})
+						}).catch(err => {
+							console.log(err)
+							uni.hideLoading()
+							uni.showToast({
+								title: err.error,
+								duration: 2000,
+								icon: 'none'
+							})
 						})
 					}else{
-						this.pageNum = this.pageNum+1
-						// 数据处理
-						res_blog.map((item_blog,index_blog)=>{
-							item_blog.isLike = false
-							item_blog.isCollect = false
-							item_blog.createdAt = this.getDateDiff(item_blog.createdAt)
-							// 分割imgList
-							if(item_blog.imgList){
-								item_blog.imgList=item_blog.imgList.split(",")
-							}
-							// 分割tag
-							if(item_blog.tag){
-								item_blog.tag=item_blog.tag.split(",")
-							}
-							// 查询点赞的关联关系
-							let queryLike = Bmob.Query('MicroBlog')
-							queryLike.field('likes',item_blog.objectId)
-							// 查询点赞的具体的用户信息
-							queryLike.relation('Like').then(res_like => {
-								item_blog.likes = res_like
-								// 查询是否点赞这条帖子 方法一
-								for(var i = 0; i < res_like.results.length; i++){
-									if(res_like.results[i].creator.objectId === this.objectId){
-										item_blog.isLike = true
-										break
-									}
-								}
-								// console.log('index',index_blog,'countNumber',countNumberLike,'result',res_like)
-								countNumberLike = countNumberLike + 1
-								if(countNumberLike === res_blog.length && countNumberComment === res_blog.length && countNumberCollect === res_blog.length){
-									this.blogList=this.blogList.concat(res_blog)
-									uni.hideLoading()
-									console.log('this.blogList',this.blogList)
-								}
-							})
-							// 查询评论的关联关系
-							let queryComment = Bmob.Query('MicroBlog')
-							queryComment.field('comments',item_blog.objectId)
-							// 查询评论的具体用户信息
-							queryComment.relation('Comment').then(res_comment => {
-								item_blog.comments = res_comment
-								countNumberComment = countNumberComment + 1
-								if(countNumberLike === res_blog.length && countNumberComment === res_blog.length && countNumberCollect === res_blog.length){
-									this.blogList=this.blogList.concat(res_blog)
-									uni.hideLoading()
-									console.log('this.blogList',this.blogList)
-								}
-							})
-							// 查询收藏的关联关系
-							let queryCollect = Bmob.Query('MicroBlog')
-							queryCollect.field('collects',item_blog.objectId)
-							// 查询收藏的具体的用户信息
-							queryCollect.relation('Collect').then(res_collect => {
-								item_blog.collects = res_collect
-								// 查询是否收藏这条帖子 方法一
-								for(var i = 0; i < res_collect.results.length; i++){
-									if(res_collect.results[i].creator.objectId === this.objectId){
-										item_blog.isCollect = true
-										break
-									}
-								}
-								countNumberCollect = countNumberCollect + 1
-								if(countNumberLike === res_blog.length && countNumberComment === res_blog.length && countNumberCollect === res_blog.length){
-									this.blogList=this.blogList.concat(res_blog)
-									uni.hideLoading()
-									console.log('this.blogList',this.blogList)
-								}
-							})
-						})
+						uni.hideLoading()
+						this.blogList = []
 					}
 				}).catch(err => {
 					console.log(err)
+					uni.hideLoading()
+					uni.showToast({
+						title: err.error,
+						duration: 2000,
+						icon: 'none'
+					})
 				})
 			},
 			// 点赞
