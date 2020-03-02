@@ -24,7 +24,7 @@
 						{{item.content}}
 					</view>
 					<!-- 图片部分 -->
-					<view class="grid flex-sub" style="padding:0" :class="item.imgList.length!=1?'col-3 grid-square':'col-1'" v-if="item.imgList[0]==''?false:true">
+					<view class="grid flex-sub" style="padding:0" :class="item.imgList.length!=1?'col-3 grid-square':'col-1'" v-if="item.imgList[0]===''?false:true">
 						<view class="bg-img" :class="imgItem.length!=1?'':'only-img'"
 						 v-for="(imgItem,imgIndex) in item.imgList" :key="imgIndex">
 							<image :src="imgItem" style="width:750upx" mode="widthFix" @click.stop="previewImg(item.imgList,imgIndex)" :lazy-load="isLazyLoad"></image>
@@ -187,7 +187,7 @@
 				}else{
 					this.btnShow = true
 				}
-				if(this.oldScrollTop == 0){
+				if(this.oldScrollTop === 0){
 					this.btnShow = false
 				}
 			},
@@ -200,6 +200,7 @@
 			},
 			// 初始化首页数据
 			initBlogList(){
+				this.pageNum = 1
 				var countNumberLike = 0 
 				var countNumberComment = 0 
 				var countNumberCollect = 0 
@@ -236,13 +237,13 @@
 							item_blog.likes = res_like
 							// 查询是否点赞这条帖子 方法一
 							for(var i = 0; i < res_like.results.length; i++){
-								if(res_like.results[i].creator.objectId == this.objectId){
+								if(res_like.results[i].creator.objectId === this.objectId){
 									item_blog.isLike = true
 									break
 								}
 							}
 							countNumberLike = countNumberLike + 1
-							if(countNumberLike == res_blog.length && countNumberComment == res_blog.length && countNumberCollect == res_blog.length){
+							if(countNumberLike === res_blog.length && countNumberComment === res_blog.length && countNumberCollect === res_blog.length){
 								this.blogList=res_blog
 								uni.hideLoading()
 								console.log('this.blogList',this.blogList)
@@ -255,7 +256,7 @@
 						queryComment.relation('Comment').then(res_comment => {
 							item_blog.comments = res_comment
 							countNumberComment = countNumberComment + 1
-							if(countNumberLike == res_blog.length && countNumberComment == res_blog.length && countNumberCollect == res_blog.length){
+							if(countNumberLike === res_blog.length && countNumberComment === res_blog.length && countNumberCollect === res_blog.length){
 
 								this.blogList=res_blog
 								uni.hideLoading()
@@ -270,13 +271,13 @@
 							item_blog.collects = res_collect
 							// 查询是否收藏这条帖子 方法一
 							for(var i = 0; i < res_collect.results.length; i++){
-								if(res_collect.results[i].creator.objectId == this.objectId){
+								if(res_collect.results[i].creator.objectId === this.objectId){
 									item_blog.isCollect = true
 									break
 								}
 							}
 							countNumberCollect = countNumberCollect + 1
-							if(countNumberLike == res_blog.length && countNumberComment == res_blog.length && countNumberCollect == res_blog.length){
+							if(countNumberLike === res_blog.length && countNumberComment === res_blog.length && countNumberCollect === res_blog.length){
 								this.blogList=res_blog
 								uni.hideLoading()
 								console.log('this.blogList',this.blogList)
@@ -306,7 +307,7 @@
 					title: '加载中'
 				})
 				query.find().then(res_blog => {
-					if(res_blog.length==0){
+					if(res_blog.length===0){
 						uni.showToast({
 							title: '没有更多了',
 							duration: 2000,
@@ -335,14 +336,14 @@
 								item_blog.likes = res_like
 								// 查询是否点赞这条帖子 方法一
 								for(var i = 0; i < res_like.results.length; i++){
-									if(res_like.results[i].creator.objectId == this.objectId){
+									if(res_like.results[i].creator.objectId === this.objectId){
 										item_blog.isLike = true
 										break
 									}
 								}
 								// console.log('index',index_blog,'countNumber',countNumberLike,'result',res_like)
 								countNumberLike = countNumberLike + 1
-								if(countNumberLike == res_blog.length && countNumberComment == res_blog.length && countNumberCollect == res_blog.length){
+								if(countNumberLike === res_blog.length && countNumberComment === res_blog.length && countNumberCollect === res_blog.length){
 									this.blogList=this.blogList.concat(res_blog)
 									uni.hideLoading()
 									console.log('this.blogList',this.blogList)
@@ -355,7 +356,7 @@
 							queryComment.relation('Comment').then(res_comment => {
 								item_blog.comments = res_comment
 								countNumberComment = countNumberComment + 1
-								if(countNumberLike == res_blog.length && countNumberComment == res_blog.length && countNumberCollect == res_blog.length){
+								if(countNumberLike === res_blog.length && countNumberComment === res_blog.length && countNumberCollect === res_blog.length){
 									this.blogList=this.blogList.concat(res_blog)
 									uni.hideLoading()
 									console.log('this.blogList',this.blogList)
@@ -369,14 +370,14 @@
 								item_blog.collects = res_collect
 								// 查询是否收藏这条帖子 方法一
 								for(var i = 0; i < res_collect.results.length; i++){
-									if(res_collect.results[i].creator.objectId == this.objectId){
+									if(res_collect.results[i].creator.objectId === this.objectId){
 										item_blog.isCollect = true
 										break
 									}
 								}
 								countNumberCollect = countNumberCollect + 1
-								if(countNumberLike == res_blog.length && countNumberComment == res_blog.length && countNumberCollect == res_blog.length){
-									this.blogList=res_blog
+								if(countNumberLike === res_blog.length && countNumberComment === res_blog.length && countNumberCollect === res_blog.length){
+									this.blogList=this.blogList.concat(res_blog)
 									uni.hideLoading()
 									console.log('this.blogList',this.blogList)
 								}

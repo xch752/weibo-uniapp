@@ -12,9 +12,9 @@
 				<view class="flex-twice padding-top-lg radius padding-right-xl text-bold" @click="chooseLogin"><text id="registerType" class="text-white bg-mauve round"  style="padding: 24upx 55upx">注册</text></view>
 			</view>
 			<view class="flex  p-xs mb-sm flex-sub">
-				<view class="flex-twice radius padding-left-xl"><text v-if="typeCheck==0" class="lg text-white cuIcon-usefullfill"></text></view>
+				<view class="flex-twice radius padding-left-xl"><text v-if="typeCheck===0" class="lg text-white cuIcon-usefullfill"></text></view>
 				<view class="flex-treble radius"></view>
-				<view class="flex-twice radius padding-right-xl"><text v-if="typeCheck==1"  class="lg text-white cuIcon-usefullfill"></text></view>
+				<view class="flex-twice radius padding-right-xl"><text v-if="typeCheck===1"  class="lg text-white cuIcon-usefullfill"></text></view>
 			</view>
 		</view>
 		<!-- 登录 -->
@@ -183,7 +183,7 @@
 				// 手机号正则判断
 				if((/^1[3456789]\d{9}$/.test(this.registerUserName))){
 					const query = Bmob.Query("_User")
-					query.equalTo("username","==", this.registerUserName)
+					query.equalTo("username","===", this.registerUserName)
 					query.find().then(res => {
 						// 手机号已注册
 						if (res.length >= 1) {

@@ -188,7 +188,7 @@
 				}else{
 					this.btnShow = true
 				}
-				if(this.oldScrollTop == 0){
+				if(this.oldScrollTop === 0){
 					this.btnShow = false
 				}
 			},
@@ -259,7 +259,7 @@
 				queryBlog.skip(this.pageNum*this.pageSize)
 				queryBlog.order('-createdAt')
 				queryBlog.find().then(res=>{
-					if(res.length == 0){
+					if(res.length === 0){
 						uni.showToast({
 							title: '没有更多了',
 							duration: 2000,

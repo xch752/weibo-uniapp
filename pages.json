@@ -98,6 +98,13 @@
             	"navigationStyle": "custom"
 			}
         }
+        ,{
+            "path" : "pages/Content/Attention/Attention",
+            "style" : {
+				"navigationBarTitleText": "关注",
+            	"navigationStyle": "custom"
+			}
+        }
     ],
 	"globalStyle": {
 		"navigationBarTextStyle": "white",
@@ -171,6 +178,11 @@
 			{
 				"name": "User",
 				"path": "pages/Content/User/User",
+				"query": "objectId=n7HGPPPY"
+			},
+			{
+				"name": "Attention",
+				"path": "pages/Content/Attention/Attention",
 				"query": "objectId=n7HGPPPY"
 			}
 		]

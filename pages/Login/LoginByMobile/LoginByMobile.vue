@@ -45,7 +45,7 @@
 				// 手机号正则判断
 				if((/^1[3456789]\d{9}$/.test(this.logUserName))){
 					const query = Bmob.Query("_User")
-					query.equalTo("username","==", this.logUserName)
+					query.equalTo("username","===", this.logUserName)
 					query.find().then(res => {
 						// 发送验证码
 						let params = {

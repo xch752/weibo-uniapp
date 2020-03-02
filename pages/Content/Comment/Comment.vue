@@ -1,7 +1,7 @@
 <template>
 	<view>
 		<uni-nav-bar left-icon="back" @click-left="navBack" :status-bar="true" shadow="true" fixed="true" title="评论"></uni-nav-bar>
-		<scroll-view v-if="commentsList.length == 0?false:true" :style="{'height':windowHeight+'px'}"  @scrolltolower="currentChange" scroll-y="true">
+		<scroll-view v-if="commentsList.length === 0?false:true" :style="{'height':windowHeight+'px'}"  @scrolltolower="currentChange" scroll-y="true">
 			<view class="cu-list menu-avatar">
 				<view class="cu-item" v-for="(item,index) in commentsList" :key="index" :style="{'background':item.background}"  @click="Reply(item,index)">
 					<view class="cu-avatar round lg" :style="{'background-image':'url('+item.creator.avatarUrl+')'}"></view>
@@ -20,7 +20,7 @@
 				</view>
 			</view>
 		</scroll-view>
-		<view v-if="commentsList.length == 0?true:false" class="flex justify-center align-center" :style="{'height':windowHeight+'px'}">
+		<view v-if="commentsList.length === 0?true:false" class="flex justify-center align-center" :style="{'height':windowHeight+'px'}">
 			<view style="text-align:center">
 				<image src="http://static.xch752.com/undraw_sync_files_xb3r.png" mode="aspectFit" style="width: 200upx;height: 200upx;"></image>
 				<view class="text-gray margin-top-sm">还没有评论</view>
@@ -126,7 +126,7 @@
 			// 初始化数据
 			initData(){
 				const query = this.Bmob.Query("MicroBlog")
-				query.equalTo("objectId","==", this.microBlogId)
+				query.equalTo("objectId","===", this.microBlogId)
 				uni.showLoading({
 					title: '加载中'
 				})
@@ -169,7 +169,7 @@
 			// 下拉加载
 			currentChange(){
 				const query = this.Bmob.Query("MicroBlog")
-				query.equalTo("objectId","==", this.microBlogId)
+				query.equalTo("objectId","===", this.microBlogId)
 				query.find().then(res_blog => {
 					// console.log(res_blog)
 					// 查询评论的关联关系
@@ -181,7 +181,7 @@
 					queryComment.include('creator','replyUser')
 					// 查询评论的具体用户信息
 					queryComment.relation('Comment').then(res_comment => {
-						if(res_comment.results.length==0){
+						if(res_comment.results.length===0){
 							uni.showToast({
 								title: '没有更多了',
 								duration: 2000,
@@ -214,7 +214,7 @@
 			},
 			// 发送评论
 			postComment(e){
-				if(this.bodyValue == '')
+				if(this.bodyValue === '')
 				return
 				console.log(e)
 				// 关联评论者
@@ -282,7 +282,7 @@
 				setTimeout(()=>{
 					this.commentsList[index].background = '#ffffff'
 				},300)
-				if(this.inputFocus == false){
+				if(this.inputFocus === false){
 					this.inputFocus = true
 				}		
 				this.placeholderValue = `回复 ${item.creator.nickname}`

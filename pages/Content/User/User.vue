@@ -156,7 +156,7 @@
 				}else{
 					this.btnShow = true
 				}
-				if(this.oldScrollTop == 0){
+				if(this.oldScrollTop === 0){
 					this.btnShow = false
 				}
 			},
@@ -169,42 +169,42 @@
 			},
 			// 获取数据 blogCount,fansCount,attentionCount,collectCount,likeCount,isAttention,userInfo
 			initDataCount(queryObject){
-				if(queryObject.blogCount==true){
+				if(queryObject.blogCount===true){
 					const queryBlog = Bmob.Query('MicroBlog')
 					queryBlog.equalTo('creator','===',this.objectId)
 					queryBlog.count().then(res=>{
 						this.data.blogCount = res
 					})
 				}
-				if(queryObject.fansCount==true){
+				if(queryObject.fansCount===true){
 					const queryFans = Bmob.Query('Attention')
 					queryFans.equalTo('bloger','===',this.objectId)
 					queryFans.count().then(res=>{
 						this.data.fansCount = res
 					})
 				}
-				if(queryObject.attentionCount==true){
+				if(queryObject.attentionCount===true){
 					const queryAttention = Bmob.Query('Attention')
 					queryAttention.equalTo('fans','===',this.objectId)
 					queryAttention.count().then(res=>{
 						this.data.attentionCount = res
 					})
 				}
-				if(queryObject.collectCount==true){
+				if(queryObject.collectCount===true){
 					const queryCollect = Bmob.Query('Collect')
 					queryCollect.equalTo('creator','===',this.objectId)
 					queryCollect.count().then(res=>{
 						this.data.collectCount = res
 					})
 				}
-				if(queryObject.likeCount==true){
+				if(queryObject.likeCount===true){
 					const queryLike = Bmob.Query('Like')
 					queryLike.equalTo('creator','===',this.objectId)
 					queryLike.count().then(res=>{
 						this.data.likeCount = res
 					})
 				}
-				if(queryObject.isAttention==true){
+				if(queryObject.isAttention===true){
 					const queryIsAttention = Bmob.Query('Attention')
 					queryIsAttention.equalTo('bloger','===',this.objectId)
 					queryIsAttention.equalTo('fans','===',this.myObjectId)
@@ -219,7 +219,7 @@
 						}
 					})
 				}
-				if(queryObject.userInfo==true){
+				if(queryObject.userInfo===true){
 					const query = Bmob.Query('_User')
 					query.get(this.objectId).then(res => {
 						Object.assign(this.userInfo,res)
@@ -269,7 +269,7 @@
 				queryBlog.skip(this.pageNum*this.pageSize)
 				queryBlog.order('-createdAt')
 				queryBlog.find().then(res=>{
-					if(res.length == 0){
+					if(res.length === 0){
 						uni.showToast({
 							title: '没有更多了',
 							duration: 2000,

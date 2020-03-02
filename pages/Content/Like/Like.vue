@@ -1,7 +1,7 @@
 <template>
 	<view>
 		<uni-nav-bar left-icon="back" @click-left="navBack" :status-bar="true" shadow="true" fixed="true" title="点赞"></uni-nav-bar>
-		<scroll-view v-if="likesList.length == 0?false:true" :style="{'height':windowHeight+'px'}"  @scrolltolower="currentChange" scroll-y="true">
+		<scroll-view v-if="likesList.length === 0?false:true" :style="{'height':windowHeight+'px'}"  @scrolltolower="currentChange" scroll-y="true">
 			<view class="cu-list menu-avatar">
 				<view class="cu-item" v-for="(item,index) in likesList" :key="index">
 					<view class="cu-avatar round lg" :style="{'background-image':'url('+item.creator.avatarUrl+')'}"></view>
@@ -14,7 +14,7 @@
 				</view>
 			</view>
 		</scroll-view>
-		<view v-if="likesList.length == 0?true:false" class="flex justify-center align-center" :style="{'height':windowHeight+'px'}">
+		<view v-if="likesList.length === 0?true:false" class="flex justify-center align-center" :style="{'height':windowHeight+'px'}">
 			<view style="text-align:center">
 				<image src="http://static.xch752.com/undraw_Mobile_app_p3ts.png" mode="aspectFit" style="width: 200upx;height: 170upx;"></image>
 				<view class="text-gray margin-top-sm">还没有点赞</view>
@@ -100,7 +100,7 @@
 			// 初始化数据
 			initData(){
 				const query = this.Bmob.Query("MicroBlog")
-				query.equalTo("objectId","==", this.microBlogId)
+				query.equalTo("objectId","===", this.microBlogId)
 				uni.showLoading({
 					title: '加载中'
 				})
@@ -140,7 +140,7 @@
 			// 下拉加载
 			currentChange(){
 				const query = this.Bmob.Query("MicroBlog")
-				query.equalTo("objectId","==", this.microBlogId)
+				query.equalTo("objectId","===", this.microBlogId)
 				uni.showLoading({
 					title: '加载中'
 				})
@@ -154,7 +154,7 @@
 					queryLike.include('creator')
 					// 查询点赞的具体用户信息
 					queryLike.relation('Like').then(res_like => {
-						if(res_comment.results.length==0){
+						if(res_comment.results.length===0){
 							uni.showToast({
 								title: '没有更多了',
 								duration: 2000,

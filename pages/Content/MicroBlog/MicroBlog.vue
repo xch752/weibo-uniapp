@@ -23,7 +23,7 @@
                     {{microBlogInfo.content}}
                 </view>
                 <!-- 图片部分 -->
-                <view class="grid flex-sub" style="padding:0" :class="microBlogInfo.imgList.length!=1?'col-3 grid-square':'col-1'" v-if="microBlogInfo.imgList[0]==''?false:true">
+                <view class="grid flex-sub" style="padding:0" :class="microBlogInfo.imgList.length!=1?'col-3 grid-square':'col-1'" v-if="microBlogInfo.imgList[0]===''?false:true">
                     <view class="bg-img" :class="imgItem.length!=1?'':'only-img'"
                         v-for="(imgItem,imgIndex) in microBlogInfo.imgList" :key="imgIndex">
                         <image :src="imgItem" style="width:750upx" mode="widthFix" @click.stop="previewImg(microBlogInfo.imgList,imgIndex)"></image>
@@ -145,7 +145,7 @@
                         res_blog.likes = res_like
                         // 查询是否点赞这条帖子 方法一
                         for(var i = 0; i < res_like.results.length; i++){
-                            if(res_like.results[i].creator.objectId == this.objectId){
+                            if(res_like.results[i].creator.objectId === this.objectId){
                                 res_blog.isLike = true
                                 break
                             }
@@ -174,7 +174,7 @@
                         res_blog.collects = res_collect
                         // 查询是否收藏这条帖子 方法一
                         for(var i = 0; i < res_collect.results.length; i++){
-                            if(res_collect.results[i].creator.objectId == this.objectId){
+                            if(res_collect.results[i].creator.objectId === this.objectId){
                                 res_blog.isCollect = true
                                 break
                             }

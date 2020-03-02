@@ -36,8 +36,8 @@
 				<text class="text-gray">性别</text>
 				<view class="text-black text-lg padding-left-lg">
 					<picker mode='selector' @change="sexPick" :value="sexIndex" :range="sexOption" range-key="name">
-						<view class="picker" :class="userInfo.sex==''?'text-gray':'text-black'">
-							{{userInfo.sex=='m'?'男':userInfo.sex=='f'?'女':userInfo.sex=='o'?'保密':'未设置'}}
+						<view class="picker" :class="userInfo.sex===''?'text-gray':'text-black'">
+							{{userInfo.sex==='m'?'男':userInfo.sex==='f'?'女':userInfo.sex==='o'?'保密':'未设置'}}
 						</view>
 					</picker>
 				</view>
@@ -49,8 +49,8 @@
 				<text class="text-gray">生日</text>
 				<view class="text-black text-lg padding-left-lg">
 					<picker mode="date" :value="userInfo.birthday" start="1950-09-01" :end="edndate" @change="bindDateChange">
-						<view class="picker" :class="userInfo.birthday==''?'text-gray':'text-black'">
-							{{userInfo.birthday==''?'未设置':userInfo.birthday}}
+						<view class="picker" :class="userInfo.birthday===''?'text-gray':'text-black'">
+							{{userInfo.birthday===''?'未设置':userInfo.birthday}}
 						</view>
 					</picker>
 				</view>
@@ -62,8 +62,8 @@
 				<text class="text-gray">城市</text>
 				<view class="text-black text-lg padding-left-lg">
 					<picker mode="region" @change="RegionChange" :value="userInfo.city">
-						<view class="picker" :class="userInfo.city==''?'text-gray':'text-black'">
-							{{userInfo.city==''?'未设置':userInfo.city}}
+						<view class="picker" :class="userInfo.city===''?'text-gray':'text-black'">
+							{{userInfo.city===''?'未设置':userInfo.city}}
 						</view>
 					</picker>
 				</view>

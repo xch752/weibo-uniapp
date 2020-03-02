@@ -1,7 +1,7 @@
 <template>
 	<view>
 		<uni-nav-bar left-icon="back" @click-left="navBack" :status-bar="true" shadow="true" fixed="true" title="粉丝"></uni-nav-bar>
-		<scroll-view v-if="fansList.length == 0?false:true" :style="{'height':windowHeight+'px'}" @scrolltolower="currentChange"  scroll-y="true">
+		<scroll-view v-if="fansList.length === 0?false:true" :style="{'height':windowHeight+'px'}" @scrolltolower="currentChange"  scroll-y="true">
 			<view class="cu-list menu-avatar">
 				<view class="cu-item" v-for="(item,index) in fansList" :key="index">
 					<view class="cu-avatar round lg" :style="{'background-image':'url('+item.fans.avatarUrl+')'}"></view>
@@ -14,7 +14,7 @@
 				</view>
 			</view>
 		</scroll-view>
-		<view v-if="fansList.length == 0?true:false" class="flex justify-center align-center" :style="{'height':windowHeight+'px'}">
+		<view v-if="fansList.length === 0?true:false" class="flex justify-center align-center" :style="{'height':windowHeight+'px'}">
 			<view style="text-align:center">
 				<image src="http://static.xch752.com/undraw_Mobile_app_p3ts.png" mode="aspectFit" style="width: 200upx;height: 170upx;"></image>
 				<view class="text-gray margin-top-sm">还没有粉丝</view>
@@ -95,7 +95,7 @@
 				queryComment.skip(this.pageSize*(this.pageNum))
 				queryFans.find().then(res=>{
 					uni.hideLoading()
-					if(res.length == 0){
+					if(res.length === 0){
 						uni.showToast({
 							title: '没有更多了',
 							duration: 2000,
