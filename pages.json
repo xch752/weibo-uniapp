@@ -24,15 +24,17 @@
 		{
             "path" : "pages/Content/Search/Search",
             "style" : {
-				"navigationBarTitleText": "发现",
-				"navigationBarBackgroundColor": "#ffffff"
+				"navigationBarTitleText": "消息",
+				"navigationBarBackgroundColor": "#ffffff",
+            	"navigationStyle": "custom"
 			}
         },
 		{
             "path" : "pages/Content/Message/Message",
             "style" : {
 				"navigationBarTitleText": "消息",
-				"navigationBarBackgroundColor": "#ffffff"
+				"navigationBarBackgroundColor": "#ffffff",
+            	"navigationStyle": "custom"
 			}
         },
         {
@@ -208,6 +210,10 @@
 				"name": "Liked",
 				"path": "pages/Content/Liked/Liked",
 				"query": "objectId=n7HGPPPY"
+			},
+			{
+				"name": "Search",
+				"path": "pages/Content/Search/Search"
 			}
 		]
 	}

@@ -1,5 +1,5 @@
 <template>
-	<view :class="blogList.length === 0 ? '' : 'full'">
+	<view class="full">
 		<uni-nav-bar left-icon="plus" @click-left="toAdd" :status-bar="true" shadow="true" fixed="true" titleIcon="http://static.xch752.com/logo_whiteBG_256.png"></uni-nav-bar>
 		<scroll-view :scroll-top="scrollTop" :style="{'height':windowHeight+'px'}" scroll-y="true" @scrolltolower="currentChange" @scroll="scroll" >
 			<view class="cu-card dynamic solid-bottom margin-bottom-sm" :class="isCard?'no-card':''" v-for="(item,index) in blogList" :key="index" @click="toMicroBlog(item.objectId)">
@@ -62,7 +62,7 @@
 			</view>
 			<view v-if="blogList.length === 0?true:false" class="flex justify-center align-center" :style="{'height':windowHeight+'px'}">
 				<view style="text-align:center">
-					<image src="http://static.xch752.com/undraw_Mobile_app_p3ts.png" mode="aspectFit" style="width: 200upx;height: 170upx;"></image>
+					<image src="http://static.xch752.com/undraw_share_link_qtxe.png" mode="aspectFit" style="width: 300upx;height: 175upx;"></image>
 					<view class="text-gray margin-top-sm">还没有关注</view>
 				</view>
 			</view>
@@ -363,6 +363,7 @@
 						query.skip(this.pageSize*this.pageNum)
 						query.find().then(res_blog => {
 							console.log(res_blog)
+							this.pageNum++
 							if(res_blog.length==0){
 								uni.hideLoading()
 								uni.showToast({
@@ -372,7 +373,6 @@
 								})
 								return
 							}
-							this.pageNum++
 							// 数据处理
 							res_blog.map((item_blog,index_blog)=>{
 								item_blog.isLike = false
@@ -434,7 +434,7 @@
 									}
 									countNumberCollect = countNumberCollect + 1
 									if(countNumberLike === res_blog.length && countNumberComment === res_blog.length && countNumberCollect === res_blog.length){
-										this.blogList=res_blog
+										this.blogList=this.blogList.concat(res_blog)
 										uni.hideLoading()
 										console.log('this.blogList',this.blogList)
 									}

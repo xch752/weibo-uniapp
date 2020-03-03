@@ -143,6 +143,7 @@
 			// 获取分区信息
 			initPartArray(){
 				const query = Bmob.Query("Parts");
+				query.order('partIndex')
 				query.find().then(res => {
 					console.log(res)
 					this.partArray = res
