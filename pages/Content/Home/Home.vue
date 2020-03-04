@@ -68,7 +68,7 @@
 			</view>
 		</scroll-view>
 		<!-- fab -->
-		<button v-show="btnShow" class="fab" @click="goTop"></button>
+		<button class="fab" @click="goTop"></button>
 	</view>
 </template>
 

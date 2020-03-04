@@ -34,7 +34,7 @@
 			<WaterfallFlow :list="list" :loading="loading" @click="toMicroBlog"></WaterfallFlow>
 		</view>
 		<!-- fab -->
-		<button v-show="btnShow" class="fab" @click="goTop"></button>
+		<button class="fab" @click="goTop"></button>
 	</scroll-view>
 </template>
 
@@ -45,7 +45,7 @@
 		components: {WaterfallFlow},
 		data(){
 			return{
-				pageSize:10,
+				pageSize:6,
 				pageNum:1,
 				objectId:'',
 				userInfo:{
@@ -143,7 +143,6 @@
 			getSysInfo(){
 				uni.getSystemInfo({
 					success:(e)=>{
-						console.log(e)
 						this.windowHeight = e.windowHeight
 					}
 				})
@@ -231,6 +230,8 @@
 			initDataBlog(){
 				this.pageNum = 1
 				this.loading = true
+				this.list = []
+				this.getSysInfo()
 				const queryBlog = Bmob.Query('MicroBlog')
 				queryBlog.equalTo('creator','===',this.objectId)
 				queryBlog.include('creator')

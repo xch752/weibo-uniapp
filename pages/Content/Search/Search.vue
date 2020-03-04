@@ -11,14 +11,14 @@
             <swiper-item class="swiper-item" v-for="(tab,index1) in newsList" :key="index1">
                 <scroll-view class="scroll-v list" :style="{'height':windowHeight+'px'}"  @scroll="scroll" scroll-y @scrolltolower="loadMore(index1)" :scroll-top="tab.scrollTop">
 					<WaterfallFlow :list="tab.data" :loading="loading"  @click="toMicroBlog"></WaterfallFlow>
-                    <view class="loading-more">
+                    <!-- <view class="loading-more">
                         <text class="loading-more-text">{{tab.loadingText}}</text>
-                    </view>
+                    </view> -->
                 </scroll-view>
             </swiper-item>
         </swiper>
 		<!-- fab -->
-		<button v-show="btnShow" class="fab" @click="goTop"></button>
+		<button class="fab" @click="goTop"></button>
     </view>
 </template>
 <script>
@@ -37,7 +37,7 @@
         },
         data() {
             return {
-				pageSize:10,
+				pageSize:6,
                 newsList: [],
                 cacheTab: [],
                 tabIndex: 0,
@@ -58,7 +58,7 @@
 				uni.getSystemInfo({
 					success:(e)=>{
 						console.log(e)
-						this.windowHeight = e.windowHeight-(e.windowWidth/750)*(170)
+						this.windowHeight = e.windowHeight-(e.windowWidth/750)*(230)
 					}
 				})
 			},
@@ -91,9 +91,11 @@
 			// 获取某分区数据
             getList(index) {
 				this.loading = true
+				this.newsList[index].data = []
+				this.getSysInfo()
 				// this.newList[index].pageNum = 1
 				const queryBlog = this.Bmob.Query('MicroBlog')
-				// queryBlog.equalTo('part','===',index)
+				queryBlog.equalTo('part','===',index)
 				queryBlog.include('creator')
 				queryBlog.order("-createdAt")
 				queryBlog.limit(this.pageSize)
@@ -114,7 +116,7 @@
             loadMore(e) {
 				this.loading = true
 				const queryBlog = this.Bmob.Query('MicroBlog')
-				// queryBlog.equalTo('part','===',index)
+				queryBlog.equalTo('part','===',this.tabIndex)
 				queryBlog.include('creator')
 				queryBlog.order("-createdAt")
 				queryBlog.skip(this.pageSize*this.newsList[this.tabIndex].pageNum)

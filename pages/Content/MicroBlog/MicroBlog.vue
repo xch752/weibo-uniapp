@@ -49,8 +49,8 @@
                 <!-- 统计部分 -->
                 <view class="flex solid-bottom padding-xl justify-between align-center" style="padding-top: 0;padding-bottom:0upx;">
                     <view class="radius flex justify-center align-center" >
-                        <view style="line-height:70upx;margin-right:50upx" @click.stop="toLike(microBlogInfo.objectId)">{{microBlogInfo.likes.count}}点赞</view>
-                        <view style="line-height:70upx" class="text-gray" @click.stop="toComment(microBlogInfo.objectId)">{{microBlogInfo.comments.count}}评论</view>
+                        <view style="line-height:70upx;margin-right:50upx" @click.stop="toLike(microBlogInfo.objectId)">{{microBlogInfo.likes.count?microBlogInfo.likes.count:0}}点赞</view>
+                        <view style="line-height:70upx" class="text-gray" @click.stop="toComment(microBlogInfo.objectId)">{{microBlogInfo.comments.count?microBlogInfo.comments.count:0}}评论</view>
                     </view>
                     <view v-if="microBlogInfo.Geolocation.name" class="radius flex justify-center align-center" @click.stop="openLocation(microBlogInfo.Geolocation)">
                         <image class="card-btn" style="width:60upx;height:60upx" src="../../../static/img/address.png" mode="aspectFill" />
@@ -129,7 +129,7 @@
                     console.log(res_blog)
                     res_blog.isLike = false
                     res_blog.isCollect = false
-                    res_blog.createdAt = this.getDateDiff(res_blog.createdAt)
+					res_blog.createdAt = this.getDateDiff(res_blog.createdAt)
                     // 分割imgList
                     if(res_blog.imgList){
                         res_blog.imgList=res_blog.imgList.split(",")
@@ -150,9 +150,7 @@
                                 break
                             }
                         }
-                        if(this.microBlogInfo!=res_blog){
-                            this.microBlogInfo=res_blog
-                        }
+                        this.microBlogInfo=res_blog
                         uni.hideLoading()
                     })
                     // 查询评论的关联关系
@@ -179,14 +177,12 @@
                                 break
                             }
                         }
-                        if(this.microBlogInfo!=res_blog){
-                            this.microBlogInfo=res_blog
-                        }
+                        this.microBlogInfo=res_blog
                         uni.hideLoading()
                     })
-                    setTimeout(()=>{
-                        this.microBlogInfo=res_blog
-                    },100)
+                    // setTimeout(()=>{
+                    //     this.microBlogInfo=res_blog
+                    // },1000)
                     uni.hideLoading()
                 }).catch(err => {
                     console.log(err)

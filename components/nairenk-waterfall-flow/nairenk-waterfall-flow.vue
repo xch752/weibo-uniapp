@@ -55,6 +55,14 @@
 			list: function (newVal, oldVal) {
 				this.mark = oldVal.length;
 				if (newVal != oldVal) {
+					if(newVal.length==0){
+						this.loadingTop = 0;
+						this.boxHeight= [];
+						this.mark = 0;
+						this.top = [];
+						this.left = [];
+						this.newList = [];
+					}
 					this.newList = this.list;
 					this.$nextTick(function () {
 						setTimeout(() => {
