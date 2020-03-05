@@ -27,7 +27,7 @@
 					<view class="grid flex-sub" style="padding:0" :class="item.imgList.length!=1?'col-3 grid-square':'col-1'" v-if="item.imgList[0]===''?false:true">
 						<view class="bg-img" :class="imgItem.length!=1?'':'only-img'"
 						 v-for="(imgItem,imgIndex) in item.imgList" :key="imgIndex">
-							<image :src="imgItem" style="width:750upx" mode="widthFix" @click.stop="previewImg(item.imgList,imgIndex)" :lazy-load="isLazyLoad"></image>
+							<image :src="imgItem" style="width:750upx" :mode="item.imgList.length!=1?'aspectFill':'widthFix'" @click.stop="previewImg(item.imgList,imgIndex)" :lazy-load="isLazyLoad"></image>
 						</view>
 					</view>
 					<!-- 按钮部分 -->

@@ -91,9 +91,9 @@
 			// 获取某分区数据
             getList(index) {
 				this.loading = true
-				this.newsList[index].data = []
+                this.newsList[index].data = []
+                this.newsList[index].pageNum = 1
 				this.getSysInfo()
-				// this.newList[index].pageNum = 1
 				const queryBlog = this.Bmob.Query('MicroBlog')
 				queryBlog.equalTo('part','===',index)
 				queryBlog.include('creator')
@@ -126,7 +126,8 @@
 						this.loading = false
 						uni.showToast({
 							title: '没有更多了',
-							duration: 2000
+                            duration: 2000,
+                            icon: 'none'
 						})
 						this.newsList[this.tabIndex].loadingText = '没有更多了'
 						return

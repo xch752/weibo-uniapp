@@ -9,7 +9,7 @@
 		<view class="content-box">
 			<view>
 				<textarea maxlength="150"
-				placeholder="请如实填写举报原因"
+				placeholder="您的意见和建议，是对我们最大的支持"
 				style="width: 100%;height:400upx;padding:40upx"
 				v-model="bodyValue"></textarea>
 			</view>
@@ -39,7 +39,6 @@
 		data() {
 			return {
 				objectId:'',
-				microBlogId:'',
 				// 图片
 				imgList:[],
 				// 图片链接
@@ -51,8 +50,6 @@
 			}
 		},
 		onLoad:function(option){
-			this.microBlogId = option.microBlogId
-			console.log(this.microBlogId)
 			this.initQiniu()
 			this.loadUserData()
 		},
@@ -161,7 +158,7 @@
 						}, {
 							region: 'SCN',
 							domain: 'http://static.xch752.com', // // bucket 域名，下载资源时用到。如果设置，会在 success callback 的 res 参数加上可以直接使用的 ImageURL 字段。否则需要自己拼接
-							key: `Report/${this.objectId}/${this.randomWord(true,20,20)}`, // [非必须]自定义文件 key。如果不设置，默认为使用微信小程序 API 的临时文件名
+							key: `Feedback/${this.objectId}/${this.randomWord(true,20,20)}`, // [非必须]自定义文件 key。如果不设置，默认为使用微信小程序 API 的临时文件名
 							// 以下方法三选一即可，优先级为：uptoken > uptokenURL > uptokenFunc
 							uptoken: this.token, // 由其他程序生成七牛 uptoken
 						}, (res) => {
@@ -180,20 +177,16 @@
 					//	创建用户对象
 					const pointer = Bmob.Pointer('_User')
 					const poiID = pointer.set(this.objectId)
-					// 创建博客对象
-					const pointer_blog = Bmob.Pointer('MicroBlog')
-					const poiID_blog = pointer.set(this.microBlogId)
 
-					const query = Bmob.Query('Report')
+					const query = Bmob.Query('Feedback')
 					query.set("imgList",this.imgListUrl.join())
 					query.set("content",this.bodyValue)
-					query.set("reportBlog",poiID_blog)
-					query.set("reportUser",poiID)
+					query.set("feedbackUser",poiID)
 					query.save().then(res => {
 						uni.hideLoading()
 						uni.showModal({
-							title:'提示',
-							content:'举报成功',
+							title:'成功',
+							content:'感谢您的反馈~',
 							showCancel:false,
 							complete: () => {
 								uni.navigateBack({
@@ -247,7 +240,7 @@
 		position: fixed;
 		top: 50upx;
 		left: 125upx;
-		background-image:url('http://static.xch752.com/undraw_product_photography_91i2.png');
+		background-image:url('http://static.xch752.com/undraw_select_option_y75i.png');
 		width: 500upx;
 		height: 350upx;
 	}

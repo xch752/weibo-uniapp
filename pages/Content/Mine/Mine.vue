@@ -169,10 +169,7 @@
 								});
 								break
 							case 1:
-								uni.showToast({
-									title: '反馈',
-									duration: 2000
-								})
+								this.toFeedback()
 								break
 							default:
 								break
@@ -340,6 +337,11 @@
 			toMicroBlog(item){
 				uni.navigateTo({
 					url: `../MicroBlog/MicroBlog?microBlogId=${item.objectId}`
+				})
+			},
+			toFeedback(){
+				uni.navigateTo({
+					url: `../Feedback/Feedback`
 				})
 			},
 			getAstro(m,d){

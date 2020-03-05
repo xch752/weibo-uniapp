@@ -44,7 +44,7 @@
 		<view class="uploadimgList">
 			<view class="flex justify-end align-start addImg"
 				v-for="(item,index) in imgList" :key="index"
-				:style="{'background':'#FFFFFF', 'background-image': 'url(' + item + ')','background-repeat':'no-repeat','background-size':'cover' }">
+				:style="{'background-image': 'url(' + item + ')'}">
 				<text class="xl text-red cuIcon-roundclosefill" 
 					@click="deleteImg(index)"></text>
 			</view>
@@ -183,77 +183,86 @@
 						showCancel:false
 					})
 				}else{
-					// 创建用户对象
-					const pointer = Bmob.Pointer('_User')
-					const poiID = pointer.set(this.objectId)
-					const query = Bmob.Query('MicroBlog')
-					query.set("imgList",this.imgListUrl.join())
-					query.set("content",this.bodyValue)
-					query.set("creator",poiID)
-					query.set("Geolocation",this.geolocation)
-					query.set("tag",this.tag.join())
-					query.set("part",this.partArray[this.index].partIndex)
-					query.save().then(res => {
-						uni.showModal({
-							title:'提示',
-							content:'发布成功',
-							showCancel:false,
-							complete: () => {
-								uni.navigateBack({
-									delta: 1
+					uni.showLoading({
+						title: '上传中'
+					})
+					var p = new Array()
+					for(let index in this.imgList){
+						p[index] = new Promise(resolve =>{
+							qiniuUploader.upload(this.imgList[index], (res) => {
+								this.imgListUrl.push(res.fileUrl)
+								console.log('file url is: ' + res.fileUrl)
+								resolve(this.imgListUrl)
+							}, (error) => {
+								uni.showToast({
+									title: error,
+									duration: 2000
 								})
-							}
+							}, {
+								region: 'SCN',
+								domain: 'http://static.xch752.com', // // bucket 域名，下载资源时用到。如果设置，会在 success callback 的 res 参数加上可以直接使用的 ImageURL 字段。否则需要自己拼接
+								key: `MicroBlog/${this.objectId}/${this.randomWord(true,20,20)}`, // [非必须]自定义文件 key。如果不设置，默认为使用微信小程序 API 的临时文件名
+								// 以下方法三选一即可，优先级为：uptoken > uptokenURL > uptokenFunc
+								uptoken: this.token, // 由其他程序生成七牛 uptoken
+							}, (res) => {
+
+							}, () => {
+								// 取消上传
+							}, () => {
+								// `before` 上传前执行的操作
+							}, (err) => {
+								// `complete` 上传接受后执行的操作(无论成功还是失败都执行)
+							})
 						})
-						console.log(res)
-					}).catch(err => {
-						console.log(err)
+					}
+					Promise.all(p).then(res=>{
+						console.log('this.imgListUrl',this.imgListUrl)
+						//	创建用户对象
+						const pointer = Bmob.Pointer('_User')
+						const poiID = pointer.set(this.objectId)
+						const query = Bmob.Query('MicroBlog')
+						query.set("imgList",this.imgListUrl.join())
+						query.set("content",this.bodyValue)
+						query.set("creator",poiID)
+						query.set("Geolocation",this.geolocation)
+						query.set("tag",this.tag.join())
+						query.set("part",this.partArray[this.index].partIndex)
+						query.save().then(res => {
+							uni.hideLoading()
+							uni.showModal({
+								title:'提示',
+								content:'发布成功',
+								showCancel:false,
+								complete: () => {
+									uni.navigateBack({
+										delta: 1
+									})
+								}
+							})
+							console.log(res)
+						}).catch(err => {
+							console.log(err)
+						})
 					})
 				}
 			},
 			// 选择图片
 			chooseImg(){
-				var THAT = this;
 				uni.chooseImage({
-					count:1,
+					count:9,
 					sizeType:['original','compressed'],//原图&压缩
 					sourceType:['album','camera'],//相册&相机
 					success: (res) => {
-						if(THAT.imgList.length<9){
-							THAT.imgList.push(res.tempFilePaths[0]);
-							var filePath = res.tempFilePaths[0]
-							qiniuUploader.upload(filePath, (res) => {
-								THAT.imgListUrl.push(res.fileUrl);
-								console.log('file url is: ' + res.fileUrl);
-							}, (error) => {
-								console.log('error: ' + error);
-							}, {
-							  region: 'SCN',
-							  domain: 'http://static.xch752.com', // // bucket 域名，下载资源时用到。如果设置，会在 success callback 的 res 参数加上可以直接使用的 ImageURL 字段。否则需要自己拼接
-							  key: `MicroBlog/${THAT.objectId}/${THAT.randomWord(true,20,20)}`, // [非必须]自定义文件 key。如果不设置，默认为使用微信小程序 API 的临时文件名
-							  // 以下方法三选一即可，优先级为：uptoken > uptokenURL > uptokenFunc
-							  uptoken: THAT.token, // 由其他程序生成七牛 uptoken
-							}, (res) => {
-								// console.log(res);
-								if(res.progress!==100){
-									uni.showLoading({
-										title:`上传中，已上传${res.progress}`,
-										icon:'loading'
-									})
-								}else if(res.progress===100){
-									uni.hideLoading()
-								}
-								// console.log('上传进度', res.progress)
-								// console.log('已经上传的数据长度', res.totalBytesSent)
-								// console.log('预期需要上传的数据总长度', res.totalBytesExpectedToSend)
-							}, () => {
-							  // 取消上传
-							}, () => {
-							  // `before` 上传前执行的操作
-							}, (err) => {
-							  // `complete` 上传接受后执行的操作(无论成功还是失败都执行)
-							});
+						console.log(this.imgList.length + res.tempFilePaths.length)
+						if(this.imgList.length + res.tempFilePaths.length <= 9){
+							this.imgList = this.imgList.concat(res.tempFilePaths)
+						}else{
+							uni.showToast({
+								title: '选择图片大于9张',
+								duration: 2000,
+								icon:'none'
+							})
 						}
-						console.log(THAT.imgList)
 					},
 					fail: (err) => {
 						console.log(err)
@@ -263,7 +272,6 @@
 			// 删除图片
 			deleteImg(index){
 				this.imgList.splice(index,1)
-				this.imgListUrl.splice(index,1)
 			},
 			// 删除TAG
 			deleteTag(index){
@@ -330,11 +338,17 @@
 		height: 200upx;
 		margin: 15upx;
 		border: #EEEEEE solid 3upx;
+		background-position: center center;
+		background-repeat: no-repeat;
+		background-size: cover;
 	}
 	.uploadimgList .addImg image{
 		width: 50upx;
 		height: 50upx;
 		border: 0;
+		background-position: center center;
+		background-repeat: no-repeat;
+		background-size: cover;
 	}
 	.uploadimgList image{
 		width: 200upx;

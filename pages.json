@@ -78,6 +78,13 @@
 				"navigationBarTitleText": "举报",
             	"navigationStyle": "custom"
 			}
+		},
+		{
+            "path" : "pages/Content/Feedback/Feedback",
+            "style" : {
+				"navigationBarTitleText": "反馈",
+            	"navigationStyle": "custom"
+			}
         }
         ,{
             "path" : "pages/Content/Mine/ModifyUserInfo/ModifyUserInfo",
@@ -218,6 +225,15 @@
 			{
 				"name": "Message",
 				"path": "pages/Content/Message/Message"
+			},
+			{
+				"name": "Report",
+				"path": "pages/Content/Report/Report",
+				"query": "microBlogId=12da62f938"
+			},
+			{
+				"name": "Feedback",
+				"path": "pages/Content/Feedback/Feedback"
 			}
 		]
 	}

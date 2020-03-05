@@ -20,13 +20,13 @@
                 </view>
                 <!-- 内容部分 -->
                 <view class="text-content padding-lg" style="padding-bottom:0;padding-top:0;">
-                    {{microBlogInfo.content}}
+                    {{microBlogInfo.content?microBlogInfo.content:''}}
                 </view>
                 <!-- 图片部分 -->
                 <view class="grid flex-sub" style="padding:0" :class="microBlogInfo.imgList.length!=1?'col-3 grid-square':'col-1'" v-if="microBlogInfo.imgList[0]===''?false:true">
                     <view class="bg-img" :class="imgItem.length!=1?'':'only-img'"
                         v-for="(imgItem,imgIndex) in microBlogInfo.imgList" :key="imgIndex">
-                        <image :src="imgItem" style="width:750upx" mode="widthFix" @click.stop="previewImg(microBlogInfo.imgList,imgIndex)"></image>
+                        <image :src="imgItem" style="width:750upx" :mode="microBlogInfo.imgList.length!=1?'aspectFill':'widthFix'" @click.stop="previewImg(microBlogInfo.imgList,imgIndex)"></image>
                     </view>
                 </view>
                 <!-- 按钮部分 -->
