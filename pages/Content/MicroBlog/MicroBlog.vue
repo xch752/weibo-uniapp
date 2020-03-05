@@ -75,7 +75,14 @@
             }
         },
         onLoad:function(option){
-            this.microBlogId = option.microBlogId
+			this.microBlogId = option.microBlogId
+			if(!this.microBlogId){
+				uni.showToast({
+					title: '提示',
+					duration: 2000,
+					icon: '微博已删除'
+				})
+			}
             this.loadUserData()
 			this.initData()
 		},
