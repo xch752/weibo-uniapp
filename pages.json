@@ -128,6 +128,34 @@
             	"navigationStyle": "custom"
 			}
         }
+        ,{
+            "path" : "pages/Content/Message/Like/Like",
+            "style" : {
+				"navigationBarTitleText": "收到的点赞",
+            	"navigationStyle": "custom"
+			}
+        }
+        ,{
+            "path" : "pages/Content/Message/Collect/Collect",
+            "style" : {
+				"navigationBarTitleText": "收到的收藏",
+            	"navigationStyle": "custom"
+			}
+        }
+        ,{
+            "path" : "pages/Content/Message/Fans/Fans",
+            "style" : {
+				"navigationBarTitleText": "新的粉丝",
+            	"navigationStyle": "custom"
+			}
+        }
+        ,{
+            "path" : "pages/Content/Message/Comment/Comment",
+            "style" : {
+				"navigationBarTitleText": "收到的评论",
+            	"navigationStyle": "custom"
+			}
+        }
     ],
 	"globalStyle": {
 		"navigationBarTextStyle": "black",

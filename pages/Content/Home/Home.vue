@@ -112,8 +112,13 @@
 			},
 			loadUserData(){//获取用户信息
 				try {
-					this.objectId = uni.getStorageSync('bmob').objectId
+					if(!this.objectId){
+						this.objectId = uni.getStorageSync('bmob').objectId
+						this.userInfo = uni.getStorageSync('bmob')
+					}				
 					if (!this.objectId) {
+						console.log('this.objectId',this.objectId)
+						console.log(uni.getStorageSync('bmob').objectId)
 						uni.reLaunch({
 							url:'../../Login/Login',
 							success:()=>{
