@@ -217,7 +217,7 @@
     }
 </script>
 
-<style>
+<style scoped>
     /* #ifndef APP-PLUS */
     page {
         width: 100%;

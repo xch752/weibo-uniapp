@@ -193,6 +193,10 @@
 	"condition" : {
 		"current": 0,
 		"list": [
+			{	
+				"name": "Login",
+				"path": "pages/Login/Login"
+			},
 			{
 				"name": "SignByMobile",
 				"path": "pages/Login/LoginByMobile/LoginByMobile"

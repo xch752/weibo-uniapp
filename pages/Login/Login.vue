@@ -136,24 +136,22 @@
 					Bmob.User.login(THAT.logUserName,THAT.logPassword).then(res => {
 						uni.hideLoading()
 						console.log(res)
+
 						// 跳转主页
-						uni.reLaunch({
-							url:'../Content/Home/Home'
+						uni.setStorage({
+							key: 'bmob',
+							data: res,
+							success: function () {
+								uni.reLaunch({
+									url:'../Content/Home/Home'
+								})
+							}
 						})
-						// 本地存储 异步
-						// uni.setStorage({
-						// 	key: 'UserName',
-						// 	data: THAT.logUserName
-						// })
-						// uni.setStorage({
-						// 	key: 'Password',
-						// 	data: THAT.logPassword
-						// })
-						// 本地存储 同步
 						try {
 							uni.setStorageSync('UserName', THAT.logUserName)
 							uni.setStorageSync('Password', THAT.logPassword)
 							uni.setStorageSync('bmob', res)
+
 						} catch (e) {
 							console.log(e)
 						}
