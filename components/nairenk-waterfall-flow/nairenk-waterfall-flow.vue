@@ -6,8 +6,8 @@
 			v-for="(item, index) in newList" :key="index"
 			:data-index="index"
 			 @click="choose">
-			<view class="pic"v-if="item.image">
-				<image class="image" mode="widthFix" :src="item.image" style="width: 100%; display: block;border-radius:10upx" ></image>
+			<view class="pic">
+				<image class="image" mode="widthFix" :src="item.image?item.image:'http://static.xch752.com/errorImg.jpg'" style="width: 100%; display: block;border-radius:10upx" ></image>
 			</view>
 			<view class="content">
 				<text>{{item.content}}</text>
