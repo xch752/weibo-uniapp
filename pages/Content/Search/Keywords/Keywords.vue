@@ -1,6 +1,7 @@
 <template>
   <view class="tabs">
     <view class="blank"></view>
+    <uni-search-bar :radius="100" @confirm="search" cancelButton="none"></uni-search-bar>
     <scroll-view id="tab-bar" class="scroll-h" :scroll-x="true" :show-scrollbar="false" :scroll-into-view="scrollInto">
       <view v-for="(tab,index) in tabBars" :key="tab.partIndex" class="uni-tab-item" :id="tab.partIndex"
         :data-current="index" @click="ontabtap">
@@ -8,21 +9,53 @@
           :class="tabIndex==index ? 'uni-tab-item-title-active' : ''">{{tab.partName}}</text>
       </view>
     </scroll-view>
-    <uni-search-bar :radius="100" @confirm="search" cancelButton="none" @click="toKeywords"></uni-search-bar>
     <swiper :style="{'height':windowHeight+'px'}" :current="tabIndex" class="swiper-box" style="flex: 1;"
       :duration="300" @change="ontabchange">
-      <swiper-item class="swiper-item" v-for="(tab,index1) in newsList" :key="index1">
+      <!-- 博客 -->
+      <swiper-item class="swiper-item">
         <scroll-view class="scroll-v list" :style="{'height':windowHeight+'px'}" @scroll="scroll" scroll-y
-          @scrolltolower="loadMore(index1)" :scroll-top="tab.scrollTop">
-          <WaterfallFlow :list="tab.data" :loading="loading" @click="toMicroBlog"></WaterfallFlow>
-          <!-- <view class="loading-more">
-                        <text class="loading-more-text">{{tab.loadingText}}</text>
-                    </view> -->
+          @scrolltolower="loadMore(0)" :scroll-top="newsList[0].scrollTop">
+          <WaterfallFlow :list="newsList[0].data" :loading="loading" @click="toMicroBlog"></WaterfallFlow>
+          <!-- no-search -->
+          <view v-if="newsList[0].data.length === 0?true:false" class="flex justify-center align-center"
+            :style="{'height':windowHeight+'px'}">
+            <view style="text-align:center">
+              <image src="http://static.xch752.com/undraw_share_link_qtxe.png" mode="aspectFit"
+                style="width: 300upx;height: 175upx;"></image>
+              <view class="text-gray margin-top-sm">没有找到您想要的内容</view>
+            </view>
+          </view>
+        </scroll-view>
+      </swiper-item>
+      <!-- 用户 -->
+      <swiper-item class="swiper-item">
+        <scroll-view class="scroll-v list" :style="{'height':windowHeight+'px'}" @scroll="scroll" scroll-y
+          @scrolltolower="loadMoreUser" :scroll-top="newsList[1].scrollTop">
+          <view class="cu-list menu-avatar">
+            <view class="cu-item" v-for="(item,index) in userList" :key="item.objectId" @click="toUser(item.objectId)">
+              <view class="cu-avatar round lg" :style="{'background-image':'url('+item.avatarUrl+')'}"></view>
+              <view class="content">
+                <view class="text-black text-bold">{{item.nickname}}</view>
+                <view class="text-black text-bold">{{item.introduction}}</view>
+              </view>
+              <view class="action">
+              </view>
+            </view>
+          </view>
+          <!-- no-search -->
+          <view v-if="userList.length === 0?true:false" class="flex justify-center align-center"
+            :style="{'height':windowHeight+'px'}">
+            <view style="text-align:center">
+              <image src="http://static.xch752.com/undraw_share_link_qtxe.png" mode="aspectFit"
+                style="width: 300upx;height: 175upx;"></image>
+              <view class="text-gray margin-top-sm">没有找到您想要的内容</view>
+            </view>
+          </view>
         </scroll-view>
       </swiper-item>
     </swiper>
     <!-- fab -->
-    <button class="fab" @click="goTop"></button>
+    <!-- <button class="fab" @click="goTop"></button> -->
   </view>
 </template>
 <script>
@@ -41,20 +74,30 @@
     },
     data() {
       return {
-        pageSize: 10,
+        pageSize: 6,
         newsList: [],
         cacheTab: [],
         tabIndex: 0,
-        tabBars: [{}],
+        tabBars: [{
+          partName: '微博',
+          partIndex: 0
+        }, {
+          partName: '用户',
+          partIndex: 1
+        }],
         scrollInto: "",
         windowHeight: '',
         loading: false,
-        btnShow: false
+        btnShow: false,
+        keywords: '',
+        userList: []
       }
     },
-    onLoad() {
+    onLoad: function (option) {
+      this.keywords = option.keywords
       this.getSysInfo()
       this.getParts()
+      this.getList(0)
     },
     methods: {
       // 获取屏幕高度
@@ -66,31 +109,20 @@
         })
       },
       search(e) {
-        uni.navigateTo({
-          url: `Keywords/Keywords?keywords=${e.value}`
-        })
+        this.keywords = e.value
+        this.getList(0)
+        this.getListUser()
       },
       // 获取分区
       getParts() {
-        uni.showLoading({
-          title: '加载中'
-        })
-        const queryParts = this.Bmob.Query('Parts')
-        queryParts.order('partIndex')
-        queryParts.find().then(res => {
-          uni.hideLoading()
-          this.tabBars = res
-          this.tabBars.forEach((tabBar) => {
-            this.newsList.push({
-              data: [],
-              scrollTop: 0,
-              oldScrollTop: 0,
-              loadingText: '加载更多...',
-              pageNum: 1
-            })
+        this.tabBars.forEach((tabBar) => {
+          this.newsList.push({
+            data: [],
+            scrollTop: 0,
+            oldScrollTop: 0,
+            loadingText: '加载更多...',
+            pageNum: 1
           })
-          // console.log(this.newsList)
-          this.getList(0)
         })
       },
       // 获取某分区数据
@@ -100,9 +132,11 @@
         this.newsList[index].pageNum = 1
         this.getSysInfo()
         const queryBlog = this.Bmob.Query('MicroBlog')
-        queryBlog.equalTo('part', '===', index)
         queryBlog.include('creator')
         queryBlog.order("-createdAt")
+        queryBlog.equalTo("content", "==", {
+          "$regex": "" + this.keywords + ".*"
+        })
         queryBlog.limit(this.pageSize)
         queryBlog.find().then(res_blog => {
           res_blog.map(item => {
@@ -114,17 +148,18 @@
           })
           this.newsList[index].data = res_blog
           this.loading = false
-          // console.log(this.newsList)
         })
       },
       // 下拉加载 分页
       loadMore(e) {
         this.loading = true
         const queryBlog = this.Bmob.Query('MicroBlog')
-        queryBlog.equalTo('part', '===', this.tabIndex)
         queryBlog.include('creator')
         queryBlog.order("-createdAt")
-        queryBlog.skip(this.pageSize * this.newsList[this.tabIndex].pageNum)
+        queryBlog.equalTo("content", "==", {
+          "$regex": "" + this.keywords + ".*"
+        })
+        queryBlog.skip(this.pageSize * this.newsList[0].pageNum)
         queryBlog.limit(this.pageSize)
         queryBlog.find().then(res_blog => {
           if (res_blog.length == 0) {
@@ -148,7 +183,59 @@
           this.newsList[this.tabIndex].pageNum++
           this.newsList[this.tabIndex].data = this.newsList[this.tabIndex].data.concat(res_blog)
           this.loading = false
-          // console.log(this.newsList[this.tabIndex])
+        })
+      },
+      // 获取用户数据
+      getListUser() {
+        this.newsList[1].pageNum = 1
+        uni.showLoading({
+          title: '加载中'
+        })
+        this.getSysInfo()
+        const query = this.Bmob.Query('_User')
+        query.order("-createdAt")
+        const query1 = query.equalTo("introduction", "==", {
+          "$regex": "" + this.keywords + ".*"
+        })
+        const query2 = query.equalTo("nickname", "==", {
+          "$regex": "" + this.keywords + ".*"
+        })
+        query.or(query1, query2)
+        query.limit(this.pageSize * 2)
+        query.find().then(res => {
+          uni.hideLoading()
+          this.userList = res
+        })
+      },
+      // 用户分页
+      loadMoreUser() {
+        uni.showLoading({
+          title: '加载中'
+        })
+        this.getSysInfo()
+        const query = this.Bmob.Query('_User')
+        query.order("-createdAt")
+        const query1 = query.equalTo("introduction", "==", {
+          "$regex": "" + this.keywords + ".*"
+        })
+        const query2 = query.equalTo("nickname", "==", {
+          "$regex": "" + this.keywords + ".*"
+        })
+        query.or(query1, query2)
+        query.skip(this.pageSize * 2 * this.newsList[1].pageNum)
+        query.limit(this.pageSize * 2)
+        query.find().then(res => {
+          uni.hideLoading()
+          if (res.length === 0) {
+            uni.showToast({
+              title: '没有更多了',
+              duration: 2000,
+              icon: 'none'
+            })
+            return
+          }
+          this.newsList[1].pageNum++
+          this.userList = this.userList.concat(res)
         })
       },
       // 点击导航
@@ -164,7 +251,16 @@
       // 切换
       switchTab(index) {
         if (this.newsList[index].data.length === 0) {
-          this.getList(index);
+          switch (index) {
+            case 0:
+              this.getList(index)
+              break
+            case 1:
+              this.getListUser()
+              break
+            default:
+              break
+          }
         }
 
         if (this.tabIndex === index) {
@@ -197,7 +293,12 @@
       },
       toMicroBlog(item) {
         uni.navigateTo({
-          url: `../MicroBlog/MicroBlog?microBlogId=${item.objectId}`
+          url: `../../MicroBlog/MicroBlog?microBlogId=${item.objectId}`
+        })
+      },
+      toUser(objectId) {
+        uni.navigateTo({
+          url: `../../User/User?objectId=${objectId}`
         })
       },
       goTop: function (e) {
@@ -386,10 +487,15 @@
     width: 100upx;
     height: 100upx;
     border-radius: 50%;
-    background: url('../../../static/img/fresh.png') no-repeat;
+    background: url('../../../../static/img/fresh.png') no-repeat;
     background-size: 100% 100%;
     -moz-box-shadow: 1px 1px 3px #888888;
     -webkit-box-shadow: 1px 1px 3px #888888;
     box-shadow: 1px 1px 3px #888888;
+  }
+
+  .cu-list.menu-avatar>.cu-item .action {
+    width: 200upx;
+    text-align: center;
   }
 </style>

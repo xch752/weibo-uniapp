@@ -1,272 +1,266 @@
 {
-	"pages": [
-		{
-			"path": "pages/Login/Login",
-			"style": {
-				"navigationBarTitleText": "登录",
-				"navigationStyle": "custom"
-			}
-		},
-		{
-            "path" : "pages/Login/LoginByMobile/LoginByMobile",
-            "style" : {
-				"navigationBarTitleText": "手机验证码登录",
-				"navigationBarBackgroundColor": "#2a6dfe"
-			}
-        },
-        {
-            "path" : "pages/Content/Home/Home",
-            "style": {
-				"navigationBarTitleText": "主页",
-				"navigationStyle": "custom"
-            }
-		},
-		{
-            "path" : "pages/Content/Search/Search",
-            "style" : {
-				"navigationBarTitleText": "消息",
-				"navigationBarBackgroundColor": "#ffffff",
-            	"navigationStyle": "custom"
-			}
-        },
-		{
-            "path" : "pages/Content/Message/Message",
-            "style" : {
-				"navigationBarTitleText": "消息",
-				"navigationBarBackgroundColor": "#ffffff",
-            	"navigationStyle": "custom"
-			}
-        },
-        {
-            "path" : "pages/Content/Mine/Mine",
-            "style": {
-            	"navigationBarTitleText": "我的",
-            	"navigationStyle": "custom"
-            }
-        },
-        {
-            "path" : "pages/Content/Add/Add",
-            "style": {
-				"navigationBarTitleText": "发微博",
-            	"navigationStyle": "custom"
-            }
-        }
-        ,{
-            "path" : "pages/Content/MicroBlog/MicroBlog",
-            "style" : {
-				"navigationBarTitleText": "详情",
-            	"navigationStyle": "custom"
-			}
-        }
-        ,{
-            "path" : "pages/Content/Comment/Comment",
-            "style" : {
-				"navigationBarTitleText": "评论",
-            	"navigationStyle": "custom"
-			}
-        }
-        ,{
-            "path" : "pages/Content/Like/Like",
-            "style" : {
-				"navigationBarTitleText": "点赞",
-            	"navigationStyle": "custom"
-			}
-        }
-        ,{
-            "path" : "pages/Content/Report/Report",
-            "style" : {
-				"navigationBarTitleText": "举报",
-            	"navigationStyle": "custom"
-			}
-		},
-		{
-            "path" : "pages/Content/Feedback/Feedback",
-            "style" : {
-				"navigationBarTitleText": "反馈",
-            	"navigationStyle": "custom"
-			}
-        }
-        ,{
-            "path" : "pages/Content/Mine/ModifyUserInfo/ModifyUserInfo",
-            "style" : {
-				"navigationBarTitleText": "编辑资料",
-            	"navigationStyle": "custom"
-			}
-        }
-        ,{
-            "path" : "pages/Content/Fans/Fans",
-            "style" : {
-				"navigationBarTitleText": "粉丝",
-            	"navigationStyle": "custom"
-			}
-        }
-        ,{
-            "path" : "pages/Content/User/User",
-            "style" : {
-				"navigationBarTitleText": "查看用户",
-            	"navigationStyle": "custom"
-			}
-        }
-        ,{
-            "path" : "pages/Content/Attention/Attention",
-            "style" : {
-				"navigationBarTitleText": "关注",
-            	"navigationStyle": "custom"
-			}
-        }
-        ,{
-            "path" : "pages/Content/Collect/Collect",
-            "style" : {
-				"navigationBarTitleText": "收藏",
-            	"navigationStyle": "custom"
-			}
-        }
-        ,{
-            "path" : "pages/Content/Liked/Liked",
-            "style" : {
-				"navigationBarTitleText": "点赞",
-            	"navigationStyle": "custom"
-			}
-        }
-        ,{
-            "path" : "pages/Content/Message/Like/Like",
-            "style" : {
-				"navigationBarTitleText": "收到的点赞",
-            	"navigationStyle": "custom"
-			}
-        }
-        ,{
-            "path" : "pages/Content/Message/Collect/Collect",
-            "style" : {
-				"navigationBarTitleText": "收到的收藏",
-            	"navigationStyle": "custom"
-			}
-        }
-        ,{
-            "path" : "pages/Content/Message/Fans/Fans",
-            "style" : {
-				"navigationBarTitleText": "新的粉丝",
-            	"navigationStyle": "custom"
-			}
-        }
-        ,{
-            "path" : "pages/Content/Message/Comment/Comment",
-            "style" : {
-				"navigationBarTitleText": "收到的评论",
-            	"navigationStyle": "custom"
-			}
-        }
-    ],
-	"globalStyle": {
-		"navigationBarTextStyle": "black",
-		"navigationBarTitleText": "if",
-		"navigationBarBackgroundColor": "#2a6dfe",
-		"backgroundColor": "#F8F8F8"
-	},
-	"tabBar": {
-		"color": "#cdcdcd",
-		"selectedColor": "#39cffc",
-		"borderStyle": "white",
-		"backgroundColor": "#ffffff",
-		"list": [
-			{	
-				"pagePath": "pages/Content/Home/Home",
-				"iconPath": "static/img/tabBar/home.png",
-				"selectedIconPath": "static/img/tabBar/home_select.png"           
-			},{
-				"pagePath": "pages/Content/Search/Search",
-				"iconPath": "static/img/tabBar/search.png",
-				"selectedIconPath": "static/img/tabBar/search_select.png"     
-			},
-			{
-				"pagePath": "pages/Content/Message/Message",
-				"iconPath": "static/img/tabBar/message.png",
-				"selectedIconPath": "static/img/tabBar/message_select.png"    	 
-			},
-			{
-				"pagePath": "pages/Content/Mine/Mine",
-				"iconPath": "static/img/tabBar/mine.png",
-				"selectedIconPath": "static/img/tabBar/mine_select.png"      	 
-			}
-		]
-	},
-	"condition" : {
-		"current": 0,
-		"list": [
-			{	
-				"name": "Login",
-				"path": "pages/Login/Login"
-			},
-			{
-				"name": "SignByMobile",
-				"path": "pages/Login/LoginByMobile/LoginByMobile"
-			},
-			{
-				"name": "Add",
-				"path": "pages/Content/Add/Add"
-			},
-			{
-				"name": "MicroBlog",
-				"path": "pages/Content/MicroBlog/MicroBlog",
-				"query": "microBlogId=9b7c5e3167"
-			},
-			{
-				"name": "Comment",
-				"path": "pages/Content/Comment/Comment",
-				"query": "microBlogId=12da62f938"
-			},
-			{
-				"name": "Like",
-				"path": "pages/Content/Like/Like",
-				"query": "microBlogId=12da62f938"
-			},
-			{
-				"name": "ModifyUserInfo",
-				"path": "pages/Content/Mine/ModifyUserInfo/ModifyUserInfo",
-				"query": "objectId=ecf5432115"
-			},
-			{
-				"name": "Fans",
-				"path": "pages/Content/Fans/Fans",
-				"query": "objectId=ecf5432115"
-			},
-			{
-				"name": "User",
-				"path": "pages/Content/User/User",
-				"query": "objectId=n7HGPPPY"
-			},
-			{
-				"name": "Attention",
-				"path": "pages/Content/Attention/Attention",
-				"query": "objectId=n7HGPPPY"
-			},
-			{
-				"name": "Collect",
-				"path": "pages/Content/Collect/Collect",
-				"query": "objectId=n7HGPPPY"
-			},
-			{
-				"name": "Liked",
-				"path": "pages/Content/Liked/Liked",
-				"query": "objectId=n7HGPPPY"
-			},
-			{
-				"name": "Search",
-				"path": "pages/Content/Search/Search"
-			},
-			{
-				"name": "Message",
-				"path": "pages/Content/Message/Message"
-			},
-			{
-				"name": "Report",
-				"path": "pages/Content/Report/Report",
-				"query": "microBlogId=12da62f938"
-			},
-			{
-				"name": "Feedback",
-				"path": "pages/Content/Feedback/Feedback"
-			}
-		]
-	}
+  "pages": [{
+      "path": "pages/Login/Login",
+      "style": {
+        "navigationBarTitleText": "登录",
+        "navigationStyle": "custom"
+      }
+    },
+    {
+      "path": "pages/Login/LoginByMobile/LoginByMobile",
+      "style": {
+        "navigationBarTitleText": "手机验证码登录",
+        "navigationBarBackgroundColor": "#2a6dfe"
+      }
+    },
+    {
+      "path": "pages/Content/Home/Home",
+      "style": {
+        "navigationBarTitleText": "主页",
+        "navigationStyle": "custom"
+      }
+    },
+    {
+      "path": "pages/Content/Search/Search",
+      "style": {
+        "navigationBarTitleText": "消息",
+        "navigationBarBackgroundColor": "#ffffff",
+        "navigationStyle": "custom"
+      }
+    },
+    {
+      "path": "pages/Content/Message/Message",
+      "style": {
+        "navigationBarTitleText": "消息",
+        "navigationBarBackgroundColor": "#ffffff",
+        "navigationStyle": "custom"
+      }
+    },
+    {
+      "path": "pages/Content/Mine/Mine",
+      "style": {
+        "navigationBarTitleText": "我的",
+        "navigationStyle": "custom"
+      }
+    },
+    {
+      "path": "pages/Content/Add/Add",
+      "style": {
+        "navigationBarTitleText": "发微博",
+        "navigationStyle": "custom"
+      }
+    }, {
+      "path": "pages/Content/MicroBlog/MicroBlog",
+      "style": {
+        "navigationBarTitleText": "详情",
+        "navigationStyle": "custom"
+      }
+    }, {
+      "path": "pages/Content/Comment/Comment",
+      "style": {
+        "navigationBarTitleText": "评论",
+        "navigationStyle": "custom"
+      }
+    }, {
+      "path": "pages/Content/Like/Like",
+      "style": {
+        "navigationBarTitleText": "点赞",
+        "navigationStyle": "custom"
+      }
+    }, {
+      "path": "pages/Content/Report/Report",
+      "style": {
+        "navigationBarTitleText": "举报",
+        "navigationStyle": "custom"
+      }
+    },
+    {
+      "path": "pages/Content/Feedback/Feedback",
+      "style": {
+        "navigationBarTitleText": "反馈",
+        "navigationStyle": "custom"
+      }
+    }, {
+      "path": "pages/Content/Mine/ModifyUserInfo/ModifyUserInfo",
+      "style": {
+        "navigationBarTitleText": "编辑资料",
+        "navigationStyle": "custom"
+      }
+    }, {
+      "path": "pages/Content/Fans/Fans",
+      "style": {
+        "navigationBarTitleText": "粉丝",
+        "navigationStyle": "custom"
+      }
+    }, {
+      "path": "pages/Content/User/User",
+      "style": {
+        "navigationBarTitleText": "查看用户",
+        "navigationStyle": "custom"
+      }
+    }, {
+      "path": "pages/Content/Attention/Attention",
+      "style": {
+        "navigationBarTitleText": "关注",
+        "navigationStyle": "custom"
+      }
+    }, {
+      "path": "pages/Content/Collect/Collect",
+      "style": {
+        "navigationBarTitleText": "收藏",
+        "navigationStyle": "custom"
+      }
+    }, {
+      "path": "pages/Content/Liked/Liked",
+      "style": {
+        "navigationBarTitleText": "点赞",
+        "navigationStyle": "custom"
+      }
+    }, {
+      "path": "pages/Content/Message/Like/Like",
+      "style": {
+        "navigationBarTitleText": "收到的点赞",
+        "navigationStyle": "custom"
+      }
+    }, {
+      "path": "pages/Content/Message/Collect/Collect",
+      "style": {
+        "navigationBarTitleText": "收到的收藏",
+        "navigationStyle": "custom"
+      }
+    }, {
+      "path": "pages/Content/Message/Fans/Fans",
+      "style": {
+        "navigationBarTitleText": "新的粉丝",
+        "navigationStyle": "custom"
+      }
+    }, {
+      "path": "pages/Content/Message/Comment/Comment",
+      "style": {
+        "navigationBarTitleText": "收到的评论",
+        "navigationStyle": "custom"
+      }
+    }, {
+      "path": "pages/Content/Search/Keywords/Keywords",
+      "style": {
+        "navigationBarTitleText": "搜索",
+        "navigationStyle": "custom"
+      }
+    }
+  ],
+  "globalStyle": {
+    "navigationBarTextStyle": "black",
+    "navigationBarTitleText": "if",
+    "navigationBarBackgroundColor": "#2a6dfe",
+    "backgroundColor": "#F8F8F8"
+  },
+  "tabBar": {
+    "color": "#cdcdcd",
+    "selectedColor": "#39cffc",
+    "borderStyle": "white",
+    "backgroundColor": "#ffffff",
+    "list": [{
+        "pagePath": "pages/Content/Home/Home",
+        "iconPath": "static/img/tabBar/home.png",
+        "selectedIconPath": "static/img/tabBar/home_select.png"
+      }, {
+        "pagePath": "pages/Content/Search/Search",
+        "iconPath": "static/img/tabBar/search.png",
+        "selectedIconPath": "static/img/tabBar/search_select.png"
+      },
+      {
+        "pagePath": "pages/Content/Message/Message",
+        "iconPath": "static/img/tabBar/message.png",
+        "selectedIconPath": "static/img/tabBar/message_select.png"
+      },
+      {
+        "pagePath": "pages/Content/Mine/Mine",
+        "iconPath": "static/img/tabBar/mine.png",
+        "selectedIconPath": "static/img/tabBar/mine_select.png"
+      }
+    ]
+  },
+  "condition": {
+    "current": 0,
+    "list": [{
+        "name": "Login",
+        "path": "pages/Login/Login"
+      },
+      {
+        "name": "SignByMobile",
+        "path": "pages/Login/LoginByMobile/LoginByMobile"
+      },
+      {
+        "name": "Add",
+        "path": "pages/Content/Add/Add"
+      },
+      {
+        "name": "MicroBlog",
+        "path": "pages/Content/MicroBlog/MicroBlog",
+        "query": "microBlogId=9b7c5e3167"
+      },
+      {
+        "name": "Comment",
+        "path": "pages/Content/Comment/Comment",
+        "query": "microBlogId=12da62f938"
+      },
+      {
+        "name": "Like",
+        "path": "pages/Content/Like/Like",
+        "query": "microBlogId=12da62f938"
+      },
+      {
+        "name": "ModifyUserInfo",
+        "path": "pages/Content/Mine/ModifyUserInfo/ModifyUserInfo",
+        "query": "objectId=ecf5432115"
+      },
+      {
+        "name": "Fans",
+        "path": "pages/Content/Fans/Fans",
+        "query": "objectId=ecf5432115"
+      },
+      {
+        "name": "User",
+        "path": "pages/Content/User/User",
+        "query": "objectId=n7HGPPPY"
+      },
+      {
+        "name": "Attention",
+        "path": "pages/Content/Attention/Attention",
+        "query": "objectId=n7HGPPPY"
+      },
+      {
+        "name": "Collect",
+        "path": "pages/Content/Collect/Collect",
+        "query": "objectId=n7HGPPPY"
+      },
+      {
+        "name": "Liked",
+        "path": "pages/Content/Liked/Liked",
+        "query": "objectId=n7HGPPPY"
+      },
+      {
+        "name": "Search",
+        "path": "pages/Content/Search/Search"
+      },
+      {
+        "name": "Message",
+        "path": "pages/Content/Message/Message"
+      },
+      {
+        "name": "Report",
+        "path": "pages/Content/Report/Report",
+        "query": "microBlogId=12da62f938"
+      },
+      {
+        "name": "Feedback",
+        "path": "pages/Content/Feedback/Feedback"
+      },
+      {
+        "name": "Keywords",
+        "path": "pages/Content/Search/Keywords/Keywords",
+        "query": "keywords=hello"
+      }
+    ]
+  }
 }
