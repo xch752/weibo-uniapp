@@ -64,7 +64,7 @@
           this.$nextTick(function () {
             setTimeout(() => {
               this.waterFall();
-            }, 500)
+            }, 1000)
           })
         }
       }

@@ -324,7 +324,6 @@
 </script>
 
 <style scoped>
-  /* #ifndef APP-PLUS */
   page {
     width: 100%;
     min-height: 100%;
@@ -335,8 +334,6 @@
     min-height: 40upx;
     background: #ffffff;
   }
-
-  /* #endif */
 
   .tabs {
     flex: 1;
@@ -352,9 +349,7 @@
     width: 750upx;
     height: 80upx;
     flex-direction: row;
-    /* #ifndef APP-PLUS */
     white-space: nowrap;
-    /* #endif */
     /* flex-wrap: nowrap; */
     /* border-color: #cccccc;
 		border-bottom-style: solid;
@@ -367,9 +362,7 @@
   }
 
   .uni-tab-item {
-    /* #ifndef APP-PLUS */
     display: inline-block;
-    /* #endif */
     flex-wrap: nowrap;
     padding-left: 34upx;
     padding-right: 34upx;
@@ -381,9 +374,7 @@
     height: 80upx;
     line-height: 80upx;
     flex-wrap: nowrap;
-    /* #ifndef APP-PLUS */
     white-space: nowrap;
-    /* #endif */
   }
 
   .uni-tab-item-title-active {
@@ -401,9 +392,7 @@
 
   .scroll-v {
     flex: 1;
-    /* #ifndef MP-ALIPAY */
     flex-direction: column;
-    /* #endif */
     width: 750upx;
   }
 

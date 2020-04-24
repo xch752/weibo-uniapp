@@ -81,7 +81,7 @@
               <view style="line-height:70upx" class="text-gray" @click.stop="toComment(item.objectId)">
                 {{item.comments.count}}评论</view>
             </view>
-            <view v-if="item.Geolocation.name" class="radius flex justify-center align-center"
+            <view v-if="item.Geolocation" class="radius flex justify-center align-center"
               @click.stop="openLocation(item.Geolocation)">
               <image class="card-btn" style="width:60upx;height:60upx" src="../../../static/img/address.png"
                 mode="aspectFill" />
