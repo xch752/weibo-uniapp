@@ -11,7 +11,7 @@
           <view class="content">
             <view class="text-black text-bold">{{item.creator.nickname}}</view>
             <view class="text-black text-xs">{{item.review}}</view>
-            <view class="text-grey text-xs">{{getDateDiff(item.createdAt)}}</view>
+            <view class="text-grey text-xs">{{item.createdAt}}</view>
           </view>
           <view class="action">
             <view class="blog-img" :style="{'background-image':'url('+item.commented_blog.imgList.split(',')[0]+')'}">
@@ -117,7 +117,9 @@
           title: '加载中'
         })
         query.find().then(res => {
-          console.log(res)
+          res.map(item => {
+            item.createdAt = this.getDateDiff(item.createdAt)
+          })
           uni.hideLoading()
           this.commentList = res
         }).catch(err => {
@@ -152,6 +154,9 @@
             })
             return
           }
+          res.map(item => {
+            item.createdAt = this.getDateDiff(item.createdAt)
+          })
           this.pageNum++
           this.commentList = this.commentList.concat(res)
         }).catch(err => {
@@ -179,12 +184,11 @@
           parseInt(d[0], 10) || null,
           (parseInt(d[1], 10) || 1) - 1,
           parseInt(d[2], 10) || null
-        ).getTime() / 1000;
+        ).getTime();
         //#endif
         //#ifdef MP-WEIXIN
         var timestamp = new Date(dateTimeStamp).getTime()
         //#endif
-
         var minute = 1000 * 60;
         var hour = minute * 60;
         var day = hour * 24;
@@ -217,6 +221,7 @@
           result = "" + parseInt(minC) + "分钟前";
         } else
           result = "刚刚";
+        console.log('result', result)
         return result;
       }
     }

@@ -53,7 +53,7 @@
       "path": "pages/Content/MicroBlog/MicroBlog",
       "style": {
         "navigationBarTitleText": "详情",
-        "navigationStyle": "custom"
+        "navigationBarBackgroundColor": "#ffffff"
       }
     }, {
       "path": "pages/Content/Comment/Comment",

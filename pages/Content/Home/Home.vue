@@ -741,7 +741,7 @@
           parseInt(d[0], 10) || null,
           (parseInt(d[1], 10) || 1) - 1,
           parseInt(d[2], 10) || null
-        ).getTime() / 1000;
+        ).getTime();
         //#endif
         //#ifdef MP-WEIXIN
         var timestamp = new Date(dateTimeStamp).getTime()

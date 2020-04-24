@@ -1,14 +1,13 @@
 <template>
   <view class="full">
-    <uni-nav-bar left-icon="back" @click-left="navBack" :status-bar="true" shadow="true" fixed="true" title="详情">
-    </uni-nav-bar>
     <view class="cu-card dynamic solid-bottom margin-bottom-sm" :class="isCard?'no-card':''">
       <view class="cu-item shadow">
         <!-- 头像部分 -->
         <view class="cu-list menu-avatar">
           <view class="cu-item">
-            <image class="cu-avatar round" style="width:80upx;height:80upx" :src="microBlogInfo.creator.avatarUrl"
-              mode="aspectFill" :lazy-load="isLazyLoad" @click.stop="toUser(microBlogInfo.creator.objectId)"></image>
+            <image class="cu-avatar round" style="width:80upx;height:80upx" v-if="microBlogInfo.creator.avatarUrl"
+              :src="microBlogInfo.creator.avatarUrl" mode="aspectFill" :lazy-load="true"
+              @click.stop="toUser(microBlogInfo.creator.objectId)"></image>
             <view class="content flex-sub">
               <view class="flex justify-between">
                 <text class="text-df text-bold">{{microBlogInfo.creator.nickname}}</text>
@@ -514,7 +513,7 @@
           parseInt(d[0], 10) || null,
           (parseInt(d[1], 10) || 1) - 1,
           parseInt(d[2], 10) || null
-        ).getTime() / 1000;
+        ).getTime();
         //#endif
         //#ifdef MP-WEIXIN
         var timestamp = new Date(dateTimeStamp).getTime()

@@ -8,7 +8,7 @@
           :class="tabIndex==index ? 'uni-tab-item-title-active' : ''">{{tab.partName}}</text>
       </view>
     </scroll-view>
-    <uni-search-bar :radius="100" @confirm="search" cancelButton="none" @click="toKeywords"></uni-search-bar>
+    <uni-search-bar :radius="100" @confirm="search" cancelButton="none"></uni-search-bar>
     <swiper :style="{'height':windowHeight+'px'}" :current="tabIndex" class="swiper-box" style="flex: 1;"
       :duration="300" @change="ontabchange">
       <swiper-item class="swiper-item" v-for="(tab,index1) in newsList" :key="index1">
