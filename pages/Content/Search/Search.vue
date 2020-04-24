@@ -61,7 +61,7 @@
       getSysInfo() {
         uni.getSystemInfo({
           success: (e) => {
-            this.windowHeight = e.windowHeight - (e.windowWidth / 750) * (230)
+            this.windowHeight = e.windowHeight - (e.windowWidth / 750) * (100)
           }
         })
       },

@@ -172,7 +172,18 @@
       // 时间戳转多少分钟之前
       getDateDiff(dateTimeStamp) {
         // 时间字符串转时间戳
-        var timestamp = new Date(dateTimeStamp).getTime();
+        //#ifdef APP-PLUS
+        var f = dateTimeStamp.split(' ', 2);
+        var d = (f[0] ? f[0] : '').split('-', 3);
+        var timestamp = new Date(
+          parseInt(d[0], 10) || null,
+          (parseInt(d[1], 10) || 1) - 1,
+          parseInt(d[2], 10) || null
+        ).getTime() / 1000;
+        //#endif
+        //#ifdef MP-WEIXIN
+        var timestamp = new Date(dateTimeStamp).getTime()
+        //#endif
 
         var minute = 1000 * 60;
         var hour = minute * 60;

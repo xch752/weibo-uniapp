@@ -136,7 +136,14 @@
 					Bmob.User.login(THAT.logUserName,THAT.logPassword).then(res => {
 						uni.hideLoading()
 						console.log(res)
-
+						
+						if(res.status === 'freeze'){
+							uni.showModal({
+								title:'提示',
+								content:'该账号已被冻结'
+							})
+							return
+						}
 						// 跳转主页
 						uni.setStorage({
 							key: 'bmob',

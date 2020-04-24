@@ -41,11 +41,11 @@
           <view class="radius">
             <!-- 点赞 -->
             <button class="btn-share" type="primary" v-if="!microBlogInfo.isLike"
-              @click.stop="like(microBlogInfo.objectId,index,microBlogInfo.creator.objectId)">
+              @click.stop="like(microBlogInfo.objectId,microBlogInfo.creator.objectId)">
               <image class='btnImg' src='../../../static/img/like.png'></image>
             </button>
             <!-- 取消点赞 -->
-            <button class="btn-share" type="primary" v-else @click.stop="unlike(microBlogInfo.objectId,index)">
+            <button class="btn-share" type="primary" v-else @click.stop="unlike(microBlogInfo.objectId)">
               <image class='btnImg' src='../../../static/img/islike.png'></image>
             </button>
             <!-- 评论 -->
@@ -60,11 +60,11 @@
           <view class="radius">
             <!-- 收藏 -->
             <button class="btn-share" type="primary" v-if="!microBlogInfo.isCollect"
-              @click.stop="collect(microBlogInfo.objectId,index,microBlogInfo.creator.objectId)">
+              @click.stop="collect(microBlogInfo.objectId,microBlogInfo.creator.objectId)">
               <image class='btnImg' src='../../../static/img/collect.png'></image>
             </button>
             <!-- 取消收藏 -->
-            <button class="btn-share" type="primary" v-else @click.stop="unCollect(microBlogInfo.objectId,index)">
+            <button class="btn-share" type="primary" v-else @click.stop="unCollect(microBlogInfo.objectId)">
               <image class='btnImg' src='../../../static/img/iscollect.png'></image>
             </button>
           </view>
@@ -507,7 +507,18 @@
       // 时间格式化
       getDateDiff(dateTimeStamp) {
         // 时间字符串转时间戳
+        //#ifdef APP-PLUS
+        var f = dateTimeStamp.split(' ', 2);
+        var d = (f[0] ? f[0] : '').split('-', 3);
+        var timestamp = new Date(
+          parseInt(d[0], 10) || null,
+          (parseInt(d[1], 10) || 1) - 1,
+          parseInt(d[2], 10) || null
+        ).getTime() / 1000;
+        //#endif
+        //#ifdef MP-WEIXIN
         var timestamp = new Date(dateTimeStamp).getTime()
+        //#endif
 
         var minute = 1000 * 60
         var hour = minute * 60
