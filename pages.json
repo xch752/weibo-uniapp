@@ -23,7 +23,7 @@
     {
       "path": "pages/Content/Search/Search",
       "style": {
-        "navigationBarTitleText": "消息",
+        "navigationBarTitleText": "搜索",
         "navigationBarBackgroundColor": "#ffffff",
         "navigationStyle": "custom"
       }
@@ -47,7 +47,7 @@
       "path": "pages/Content/Add/Add",
       "style": {
         "navigationBarTitleText": "发微博",
-        "navigationStyle": "custom"
+        "navigationBarBackgroundColor": "#ffffff"
       }
     }, {
       "path": "pages/Content/MicroBlog/MicroBlog",
@@ -59,13 +59,13 @@
       "path": "pages/Content/Comment/Comment",
       "style": {
         "navigationBarTitleText": "评论",
-        "navigationStyle": "custom"
+        "navigationBarBackgroundColor": "#ffffff"
       }
     }, {
       "path": "pages/Content/Like/Like",
       "style": {
         "navigationBarTitleText": "点赞",
-        "navigationStyle": "custom"
+        "navigationBarBackgroundColor": "#ffffff"
       }
     }, {
       "path": "pages/Content/Report/Report",
@@ -120,25 +120,25 @@
       "path": "pages/Content/Message/Like/Like",
       "style": {
         "navigationBarTitleText": "收到的点赞",
-        "navigationStyle": "custom"
+        "navigationBarBackgroundColor": "#ffffff"
       }
     }, {
       "path": "pages/Content/Message/Collect/Collect",
       "style": {
         "navigationBarTitleText": "收到的收藏",
-        "navigationStyle": "custom"
+        "navigationBarBackgroundColor": "#ffffff"
       }
     }, {
       "path": "pages/Content/Message/Fans/Fans",
       "style": {
         "navigationBarTitleText": "新的粉丝",
-        "navigationStyle": "custom"
+        "navigationBarBackgroundColor": "#ffffff"
       }
     }, {
       "path": "pages/Content/Message/Comment/Comment",
       "style": {
         "navigationBarTitleText": "收到的评论",
-        "navigationStyle": "custom"
+        "navigationBarBackgroundColor": "#ffffff"
       }
     }, {
       "path": "pages/Content/Search/Keywords/Keywords",

@@ -1,7 +1,5 @@
 <template>
   <view>
-    <uni-nav-bar left-icon="back" @click-left="navBack" :status-bar="true" shadow="true" fixed="true" title="赞">
-    </uni-nav-bar>
     <scroll-view v-if="likesList.length === 0?false:true" :style="{'height':windowHeight+'px'}"
       @scrolltolower="currentChange" scroll-y="true">
       <view class="cu-list menu-avatar">
@@ -62,7 +60,7 @@
         uni.getSystemInfo({
           success: (e) => {
             console.log(e)
-            this.windowHeight = e.windowHeight - (e.windowWidth / 750) * (140)
+            this.windowHeight = e.windowHeight
           }
         })
       },

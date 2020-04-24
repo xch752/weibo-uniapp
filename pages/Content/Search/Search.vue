@@ -223,7 +223,6 @@
 </script>
 
 <style scoped>
-  /* #ifndef APP-PLUS */
   page {
     width: 100%;
     min-height: 100%;
@@ -235,7 +234,6 @@
     background: #ffffff;
   }
 
-  /* #endif */
 
   .tabs {
     flex: 1;
@@ -266,9 +264,7 @@
   }
 
   .uni-tab-item {
-    /* #ifndef APP-PLUS */
     display: inline-block;
-    /* #endif */
     flex-wrap: nowrap;
     padding-left: 34upx;
     padding-right: 34upx;

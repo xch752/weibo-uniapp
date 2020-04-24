@@ -1,7 +1,5 @@
 <template>
   <view>
-    <uni-nav-bar left-icon="back" @click-left="navBack" :status-bar="true" shadow="true" fixed="true" title="收到的评论">
-    </uni-nav-bar>
     <scroll-view v-if="commentList.length === 0?false:true" :style="{'height':windowHeight+'px'}"
       @scrolltolower="currentChange" scroll-y="true">
       <view class="cu-list menu-avatar">
@@ -62,7 +60,7 @@
         uni.getSystemInfo({
           success: (e) => {
             console.log(e)
-            this.windowHeight = e.windowHeight - (e.windowWidth / 750) * (140)
+            this.windowHeight = e.windowHeight
           }
         })
       },
@@ -221,7 +219,6 @@
           result = "" + parseInt(minC) + "分钟前";
         } else
           result = "刚刚";
-        console.log('result', result)
         return result;
       }
     }

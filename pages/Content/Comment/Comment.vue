@@ -1,7 +1,5 @@
 <template>
   <view>
-    <uni-nav-bar left-icon="back" @click-left="navBack" :status-bar="true" shadow="true" fixed="true" title="评论">
-    </uni-nav-bar>
     <scroll-view v-if="commentsList.length === 0?false:true" :style="{'height':windowHeight+'px'}"
       @scrolltolower="currentChange" scroll-y="true">
       <view class="cu-list menu-avatar">
