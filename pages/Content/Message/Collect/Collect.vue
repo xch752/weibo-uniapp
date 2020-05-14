@@ -147,7 +147,7 @@
             return
           }
           this.pageNum++
-          this.collectList = this.collectList.concat[res]
+          this.collectList = this.collectList.concat(res)
         }).catch(err => {
           uni.hideLoading()
           uni.showToast({

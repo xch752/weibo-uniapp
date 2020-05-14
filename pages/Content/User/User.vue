@@ -257,6 +257,9 @@
       },
       // 下拉加载
       currentChange(e) {
+        uni.showLoading({
+          title: '加载中'
+        })
         this.loading = true
         const queryBlog = Bmob.Query('MicroBlog')
         queryBlog.equalTo('creator', '===', this.objectId)
@@ -265,6 +268,7 @@
         queryBlog.skip(this.pageNum * this.pageSize)
         queryBlog.order('-createdAt')
         queryBlog.find().then(res => {
+          uni.hideLoading()
           if (res.length === 0) {
             uni.showToast({
               title: '没有更多了',

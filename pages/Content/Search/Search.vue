@@ -119,6 +119,9 @@
       },
       // 下拉加载 分页
       loadMore(e) {
+        uni.loading({
+          title: '加载中'
+        })
         this.loading = true
         const queryBlog = this.Bmob.Query('MicroBlog')
         queryBlog.equalTo('part', '===', this.tabIndex)
@@ -127,6 +130,7 @@
         queryBlog.skip(this.pageSize * this.newsList[this.tabIndex].pageNum)
         queryBlog.limit(this.pageSize)
         queryBlog.find().then(res_blog => {
+          uni.hideLoading()
           if (res_blog.length == 0) {
             this.loading = false
             uni.showToast({

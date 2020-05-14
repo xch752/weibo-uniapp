@@ -1,7 +1,13 @@
 <template>
   <view class="full">
+    <!--  #ifdef  APP-PLUS -->
+    <uni-nav-bar :status-bar="true" shadow="true" fixed="true"
+      titleIcon="http://static.xch752.com/logo_whiteBG_256.png"></uni-nav-bar>
+    <!--  #endif -->
+    <!-- #ifdef MP-WEIXIN -->
     <uni-nav-bar left-icon="plus" @click-left="toAdd" :status-bar="true" shadow="true" fixed="true"
       titleIcon="http://static.xch752.com/logo_whiteBG_256.png"></uni-nav-bar>
+    <!-- #endif -->
     <scroll-view :scroll-top="scrollTop" :style="{'height':windowHeight+'px'}" scroll-y="true"
       @scrolltolower="currentChange" @scroll="scroll">
       <view class="cu-card dynamic solid-bottom margin-bottom-sm" :class="isCard?'no-card':''"
@@ -100,7 +106,10 @@
       </view>
     </scroll-view>
     <!-- fab -->
-    <button class="fab" @click="goTop"></button>
+    <button v-show="btnShow" class="fab" @click="goTop"></button>
+    <!--  #ifdef  APP-PLUS -->
+    <button v-show="btnShow" class="fab_add" @click="toAdd"></button>
+    <!--  #endif -->
   </view>
 </template>
 
@@ -835,6 +844,20 @@
     height: 100upx;
     border-radius: 50%;
     background: url('../../../static/img/fresh.png') no-repeat;
+    background-size: 100% 100%;
+    -moz-box-shadow: 1px 1px 3px #888888;
+    -webkit-box-shadow: 1px 1px 3px #888888;
+    box-shadow: 1px 1px 3px #888888;
+  }
+
+  .fab_add {
+    position: fixed;
+    bottom: 180upx;
+    right: 50upx;
+    width: 100upx;
+    height: 100upx;
+    border-radius: 50%;
+    background: url('../../../static/img/fab_add.png') no-repeat;
     background-size: 100% 100%;
     -moz-box-shadow: 1px 1px 3px #888888;
     -webkit-box-shadow: 1px 1px 3px #888888;
